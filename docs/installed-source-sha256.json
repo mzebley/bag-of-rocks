@@ -1,0 +1,11 @@
+{
+  "CHANGELOG.md": "0dbbed623400cfca47c85e3e92d15dae023f994c8d5cb5a2d263ef371b0dc99a",
+  "SKILL.md": "9d1dc5b0400d42c93f54f1ac241718dcf90946b2d5ff775c988c0c4d5657a275",
+  "assets/filmstrip.html": "ce2689d38966d34b6c114ac3ad36fc8eb3a07943e1d412e515d438a8f17053ea",
+  "references/calibration.md": "e0d24f3937c2762b721b719e7262f4a7e063b51432829d80c5a8cbcd54a87eef",
+  "references/coordinator.md": "9a895b5765f2cbb04f526099aa3e272dfe10648f77aba20e961fc8a43e789222",
+  "references/review-and-report.md": "3a3f8a8ddbb25dd344cdbaebd835ea9a4fdd0ddb48b60e5fb1ae68bab6945a5d",
+  "references/traits.md": "adbf06260b416bd3861b6a1cb1667677a8ec64013e816dbd84eb8d8f806b72c0",
+  "scripts/build_packet.py": "cb241f8fcfc65d908de6663367d28d978381e1d9e0d7483be393a7250d7af217",
+  "scripts/trace_to_run.py": "fb96f2f1794893487c3972b7f0ef28a22529c8170c49926ce68e6a6bf51ec00f"
+}

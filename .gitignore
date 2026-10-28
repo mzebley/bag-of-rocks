@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.DS_Store
+.bag-of-rocks/
+node_modules/
+*.tgz
+.env
+.env.*

@@ -1,0 +1,20 @@
+{
+  "run_id": "example-address",
+  "goal": "Change my mailing address to 12 Elm St.",
+  "start_url": "https://staging.example.test/",
+  "account": "disposable-test-user",
+  "preset": "full-bag",
+  "phrasing": "own-words",
+  "mutations": "none",
+  "prohibited_effects": [
+    "Production actions",
+    "Live payments",
+    "Real outbound messages",
+    "Destructive actions on unauthorized data"
+  ],
+  "budget": {
+    "actions": 25,
+    "minutes": 10
+  },
+  "output_dir": "/absolute/path/to/run/tester"
+}

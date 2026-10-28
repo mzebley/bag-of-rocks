@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bag of Rocks filmstrip</title>
+<!--
+  Template for bag-of-rocks. To use: copy this file into the run folder,
+  replace the JSON inside the "run-data" script element with the run's data
+  (schema in references/review-and-report.md), and keep screenshots at
+  the relative paths the JSON names (or use data: URIs).
+  Steps with an empty "screenshot" render a labeled placeholder.
+-->
+<style>
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--ink:#1d1d1b;--muted:#5f5e5a;--line:#dddbd4;
+  --accent:#2f5bd3;--accent-ink:#ffffff;--bubble:#fff6d6;--bubble-ink:#3a3000;
+  --bad:#b3261e;--warn:#9a5b00;--ok:#1e6b3a;--alt:#5b4bb3;--hatch:rgba(120,120,120,.35);
+  color-scheme:light;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#141413;--surface:#1f1f1d;--ink:#ecebe6;--muted:#a9a7a0;--line:#3a3935;
+  --accent:#8aa6ff;--accent-ink:#0d1330;--bubble:#3a3417;--bubble-ink:#fff2b8;
+  --bad:#ff8a80;--warn:#ffb74d;--ok:#7bd88f;--alt:#b9adff;--hatch:rgba(200,200,200,.28);color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141413;--surface:#1f1f1d;--ink:#ecebe6;--muted:#a9a7a0;--line:#3a3935;
+  --accent:#8aa6ff;--accent-ink:#0d1330;--bubble:#3a3417;--bubble-ink:#fff2b8;
+  --bad:#ff8a80;--warn:#ffb74d;--ok:#7bd88f;--alt:#b9adff;--hatch:rgba(200,200,200,.28);color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:1100px;margin:0 auto;padding:1.5rem 1rem 4rem}
+h1{font-size:1.5rem;margin:0 0 .25rem}h2{font-size:1.15rem;margin:2rem 0 .75rem}
+.meta{color:var(--muted);font-size:.9rem}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:1rem}
+.outcome{display:grid;gap:.5rem;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));margin-top:1rem}
+.label{font-size:.75rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.chip{display:inline-block;font-size:.75rem;font-weight:600;padding:.1rem .5rem;border-radius:999px;border:1px solid currentColor}
+.k-unrecovered,.c-breakage{color:var(--bad)}.k-recovered,.c-misleading{color:var(--warn)}.k-alternate{color:var(--alt)}.c-confusion{color:var(--alt)}
+.summary li{margin:.4rem 0}.summary a{color:var(--accent)}
+.rail{display:flex;gap:.5rem;overflow-x:auto;padding-bottom:.25rem}
+.rail .card{min-width:180px;font-size:.85rem}
+.step{display:grid;gap:1rem;grid-template-columns:minmax(0,3fr) minmax(0,2fr);margin:1rem 0}
+@media (max-width:760px){.step{grid-template-columns:1fr}}
+.shot{position:relative;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--surface)}
+.shot img{display:block;width:100%;max-width:100%;height:auto}
+.ph{aspect-ratio:16/10;display:grid;place-items:center;color:var(--muted);font-size:.9rem}
+.click{position:absolute;transform:translate(-50%,-50%);width:30px;height:30px;border-radius:50%;
+  background:var(--accent);color:var(--accent-ink);font-weight:700;font-size:.8rem;display:grid;place-items:center;
+  box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 30%,transparent)}
+.click .rep{position:absolute;top:-10px;right:-18px;background:var(--bad);color:#fff;border-radius:999px;padding:0 .35rem;font-size:.7rem}
+.ignored{position:absolute;border:2px dashed var(--muted);
+  background:repeating-linear-gradient(45deg,var(--hatch) 0 6px,transparent 6px 12px)}
+.ignored span{position:absolute;bottom:100%;left:0;font-size:.68rem;background:var(--surface);color:var(--muted);padding:0 .3rem;border-radius:4px;white-space:nowrap}
+.bubble{background:var(--bubble);color:var(--bubble-ink);border-radius:12px;padding:.6rem .8rem;position:relative;margin:.25rem 0 .75rem}
+.bubble::before{content:"Expects";display:block;font-size:.7rem;font-weight:700;text-transform:uppercase;opacity:.75}
+dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:.25rem .75rem;font-size:.92rem}dt{color:var(--muted)}dd{margin:0}
+.verdicts{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.75rem}
+.verdicts button,.btn{font:inherit;font-size:.8rem;padding:.3rem .6rem;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.verdicts button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.click.approx{background:transparent;color:var(--accent);border:2px dashed var(--accent);box-shadow:none}
+.pair{display:grid;gap:.5rem}.pair .tag{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.step.wait .bubble{display:none}
+.step.reviewer{border-style:dashed}
+.harness{font-size:.85rem;color:var(--warn)}
+.entered{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.85rem;background:var(--bg);padding:.1rem .3rem;border-radius:4px}
+.untested{color:var(--warn);font-weight:600;font-size:.85rem}
+.finding{margin:.75rem 0}.finding h3{font-size:1rem;margin:.25rem 0}
+.toolbar{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1rem}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+</style>
+</head>
+<body>
+<main id="app"></main>
+
+<script id="run-data" type="application/json">
+{
+  "run": {"id":"demo-run","date":"2026-10-27","goal":"Change my mailing address to 12 Elm St.","start":"https://staging.example.test/","preset":"full-bag","traits":["VPF","HTS","FC:3","LIT","NR","LP"],"phrasing":"own-words","entered_text":"","mutations":"allowed","conditions":["slow-network"],"perception":"mixed","mode":"fast","skill_version":"0.4.1"},
+  "outcome": {"believed":"Address updated (saw a green check)","supported":"uncertain","gap":"Check appeared, but the address shown still read the old value."},
+  "summary": [
+    {"finding":"F1","headline":"Save gives no feedback for several seconds, so the rock clicked it 4 times.","step":"C2"}
+  ],
+  "intended": [
+    {"id":"I1","screen":"Account","cue":"Edit beside Mailing address","action":"Open editor"},
+    {"id":"I2","screen":"Address editor","cue":"Save button","action":"Enter address, Save"}
+  ],
+  "steps": [
+    {"id":"C1","kind":"checkpoint","screenshot":"","result_screenshot":"","cue":"Large blue 'Update profile' card","expectation":"This is where I change my info","action":"Clicked the card","result":"Opened a photo and bio editor","updated":"Wrong place; go back","traits":["VPF"],"clicks":[{"x":60,"y":45,"n":1,"approx":false}],"ignored":[{"x":6,"y":70,"w":30,"h":7,"label":"Edit (mailing address)"}],"divergence":{"from":"I1","kind":"recovered","note":"2 backtracks"}},
+    {"id":"C2","kind":"checkpoint","screenshot":"","cue":"Save, nothing changed after clicking","expectation":"It didn't take; click again","action":"Clicked Save","result":"No change, then a green check","updated":"Probably saved","traits":["FC"],"clicks":[{"x":78,"y":82,"n":4,"approx":true}],"ignored":[{"x":6,"y":55,"w":50,"h":6,"label":"Hint: use ZIP+4"}],"harness_note":"Click went through an accessibility target; marker position is approximate."},
+    {"id":"W1","kind":"wait","screenshot":"","cue":"Spinner, no visible change","result":"Still spinning after 20s","traits":["ordinary"]},
+    {"id":"END","kind":"reviewer","screenshot":"","cue":"Reviewer-added end card","result":"Rock stopped believing the address was saved."}
+  ],
+  "findings": [
+    {"id":"F1","source":"rock-exposed","recurs_in":[],"category":"breakage","title":"Save stays enabled with no loading state","steps":["C2"],"traits":["FC"],"component":"Button (loading state)","component_basis":"inferred","expected":"Clicking Save shows something happening","observed":"Nothing for several seconds; 4 clicks","cost":"Possible duplicate updates","fix":"Show a loading state and block repeat clicks while saving","fix_signal":"One request per Save under slow-network","regression_risk":"Button stuck disabled after validation errors","ablation":"Rerun without Fidget Clicker: if no duplicates, repeat clicks were the trigger."}
+  ],
+  "errata": [],
+  "limits": ["Demo data only.","Synthetic run: generates hypotheses about blind spots, not evidence of how many real users would fail."]
+}
+</script>
+
+<script>
+(function(){
+  const R = JSON.parse(document.getElementById('run-data').textContent);
+  const r = R.run || {};
+  const KEY = 'bag-of-rocks-verdicts:' + (r.id || 'run');
+  let verdicts = {};
+  try { verdicts = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { verdicts = {}; }
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(verdicts)); return true; } catch (e) { return false; } };
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const arr = v => Array.isArray(v) ? v : (v ? String(v).split(/,\s*/) : []);
+  const traitsOf = s => arr(s.traits ?? s.trait);
+  const catCls = c => c === 'breakage' ? 'c-breakage' : c === 'misleading feedback' ? 'c-misleading' : 'c-confusion';
+
+  let h = `<header><p class="label">Bag of Rocks filmstrip · ${esc(r.id)} · ${esc(r.date)} · skill ${esc(r.skill_version || '')}</p>`;
+  h += `<h1>${esc(r.goal)}</h1>`;
+  h += `<p class="meta">${esc(r.start)} · preset ${esc(r.preset)} [${arr(r.traits).map(esc).join(', ')}] · phrasing ${esc(r.phrasing || 'own-words')} · mutations ${esc(r.mutations)} · conditions ${esc(arr(r.conditions).join(', ') || 'none')} · perception ${esc(r.perception)} · mode ${esc(r.mode)}</p>`;
+  if (r.inherited_state) h += `<p class="meta">Inherited state: ${esc(r.inherited_state)}</p>`;
+  if (r.entered_text) h += `<p class="meta">Rock entered: <span class="entered">${esc(r.entered_text)}</span></p>`;
+  h += `</header>`;
+
+  const o = R.outcome || {};
+  h += `<section class="outcome">
+    <div class="card"><div class="label">Rock believed</div>${esc(o.believed)}</div>
+    <div class="card"><div class="label">Evidence supports</div><strong>${esc(o.supported)}</strong></div>
+    <div class="card"><div class="label">Gap</div>${esc(o.gap || 'None noted')}</div></section>`;
+
+  if ((R.summary||[]).length) h += `<h2>In 90 seconds</h2><ol class="summary card">` + R.summary.map(s =>
+    `<li>${esc(s.headline)} <a href="#step-${esc(s.step)}">See ${esc(s.step)}</a></li>`).join('') + `</ol>`;
+
+  if ((R.intended||[]).length) h += `<h2>Intended path (hidden from the rock)</h2><div class="rail">` + R.intended.map(i =>
+    `<div class="card"><strong>${esc(i.id)} · ${esc(i.screen)}</strong><br>${esc(i.cue)}<br><span class="meta">${esc(i.action)}</span></div>`).join('') + `</div>`;
+
+  const shot = (src, alt, overlays) => `<div class="shot">${src ? `<img src="${esc(src)}" alt="${esc(alt)}">` : `<div class="ph">${esc(alt)}</div>`}${overlays || ''}</div>`;
+
+  h += `<h2>Filmstrip</h2>`;
+  let n = 0;
+  (R.steps||[]).forEach(s => {
+    const kind = s.kind || 'checkpoint';
+    if (kind === 'checkpoint') n++;
+    const clicks = s.clicks || [];
+    const marks = clicks.map((c, j) =>
+      `<div class="click${c.approx ? ' approx' : ''}" style="left:${+c.x}%;top:${+c.y}%" aria-hidden="true">${n}${clicks.length>1?'.'+(j+1):''}${c.n>1?`<span class="rep">×${+c.n}</span>`:''}</div>`).join('');
+    const ign = (s.ignored||[]).map(g =>
+      `<div class="ignored" style="left:${+g.x}%;top:${+g.y}%;width:${+g.w}%;height:${+g.h}%" aria-hidden="true"><span>not read: ${esc(g.label)}</span></div>`).join('');
+    const before = shot(s.screenshot, `Screenshot ${s.id}${s.cue ? ': ' + s.cue : ''}`, ign + marks);
+    const visual = s.result_screenshot
+      ? `<div class="pair"><span class="tag">Before</span>${before}<span class="tag">After</span>${shot(s.result_screenshot, 'Result of ' + s.id, '')}</div>`
+      : before;
+    const d = s.divergence;
+    const dv = d ? `<p><span class="chip k-${esc(d.kind)}">${esc(d.kind)} divergence from ${esc(d.from)}</span> <span class="meta">${esc(d.note)}</span></p>` : '';
+    const clickText = clicks.map(c => `(${+c.x}%, ${+c.y}%)${c.n>1?' ×'+(+c.n):''}${c.approx?' approx':''}`).join(', ');
+    const ignText = (s.ignored||[]).map(g => esc(g.label)).join('; ');
+    const head = kind === 'wait' ? `Wait · ${esc(s.id)}` : kind === 'correction' ? `Tester correction to ${esc(s.corrects)} · ${esc(s.id)}` : kind === 'reviewer' ? `Reviewer-added · ${esc(s.id)}` : `Step ${n} · ${esc(s.id)}`;
+    h += `<article class="step card ${kind}" id="step-${esc(s.id)}">
+      ${visual}
+      <div>
+        <p class="label">${head}${traitsOf(s).length ? ' · ' + traitsOf(s).map(t => `<span class="chip">${esc(t)}</span>`).join(' ') : ''}</p>
+        ${dv}
+        ${s.expectation ? `<div class="bubble">${esc(s.expectation)}</div>` : ''}
+        <dl>
+          ${s.cue ? `<dt>Cue</dt><dd>${esc(s.cue)}</dd>` : ''}
+          ${s.action ? `<dt>Action</dt><dd>${esc(s.action)}${clickText ? ` <span class="meta">at ${clickText}</span>` : ''}</dd>` : ''}
+          ${s.entered_text ? `<dt>Entered</dt><dd><span class="entered">${esc(s.entered_text)}</span></dd>` : ''}
+          ${s.result ? `<dt>Result</dt><dd>${esc(s.result)}</dd>` : ''}
+          ${s.updated ? `<dt>Then</dt><dd>${esc(s.updated)}</dd>` : ''}
+          ${s.note ? `<dt>Note</dt><dd>${esc(s.note)}</dd>` : ''}
+          ${ignText ? `<dt>Not read</dt><dd>${ignText}</dd>` : ''}
+        </dl>
+        ${s.harness_note ? `<p class="harness">Harness: ${esc(s.harness_note)}</p>` : ''}
+        ${s.untested ? `<p class="untested">Untested commit (mutations: none): recorded as intent only.</p>` : ''}
+        <div class="verdicts" role="group" aria-label="Plausibility verdict for ${esc(s.id)}">
+          ${['plausible','too smart','too dumb','random'].map(v => `<button type="button" aria-pressed="${verdicts[s.id]===v}" data-step="${esc(s.id)}" data-v="${v}">${v}</button>`).join('')}
+        </div>
+      </div></article>`;
+  });
+
+  if ((R.findings||[]).length) h += `<h2>Findings</h2>` + R.findings.map(f => `<div class="finding card" id="finding-${esc(f.id)}">
+      <span class="chip ${catCls(f.category)}">${esc(f.category)}</span>
+      ${f.source ? `<span class="chip">${esc(f.source)}</span>` : ''}
+      ${arr(f.recurs_in).length ? `<span class="chip">also in ${arr(f.recurs_in).map(esc).join(', ')}</span>` : ''}
+      <h3>${esc(f.id)} · ${esc(f.title)}</h3>
+      <dl>
+        <dt>Steps</dt><dd>${arr(f.steps).map(x => `<a href="#step-${esc(x)}">${esc(x)}</a>`).join(', ')}</dd>
+        <dt>Traits</dt><dd>${arr(f.traits ?? f.trait).map(esc).join(', ')}</dd>
+        ${f.component ? `<dt>Component</dt><dd>${esc(f.component)} <span class="meta">(${esc(f.component_basis || 'inferred')})</span></dd>` : ''}
+        <dt>Expected</dt><dd>${esc(f.expected)}</dd>
+        <dt>Observed</dt><dd>${esc(f.observed)}</dd>
+        <dt>Cost</dt><dd>${esc(f.cost)}</dd>
+        <dt>Smallest fix</dt><dd>${esc(f.fix)}</dd>
+        <dt>Signal it worked</dt><dd>${esc(f.fix_signal)}</dd>
+        <dt>Watch for</dt><dd>${esc(f.regression_risk)}</dd>
+        ${f.ablation ? `<dt>Ablation</dt><dd>${esc(f.ablation)}</dd>` : ''}
+      </dl></div>`).join('');
+
+  if ((R.limits||[]).length) h += `<h2>Limits</h2><ul class="card">` + R.limits.map(l => `<li>${esc(l)}</li>`).join('') + `</ul>`;
+  if ((R.errata||[]).length) h += `<h2>Errata (append-only)</h2><ul class="card">` + R.errata.map(x => `<li><strong>${esc(x.date)} · ${esc(x.about)}:</strong> ${esc(x.correction)}</li>`).join('') + `</ul>`;
+
+  h += `<div class="toolbar">
+    <button class="btn" id="export">Download verdicts (JSON)</button>
+    <button class="btn" id="copy">Copy verdicts</button>
+    <button class="btn" id="clear">Clear verdicts</button>
+    <span class="meta" id="status" role="status"></span></div>`;
+
+  document.getElementById('app').innerHTML = h;
+  document.title = 'Bag of Rocks · ' + (r.goal || r.id || 'filmstrip');
+  const status = msg => { document.getElementById('status').textContent = msg; };
+  const count = () => Object.keys(verdicts).length;
+  status(save() ? (count() ? `${count()} verdicts restored from this browser.` : 'Verdicts save automatically in this browser.') : 'This browser can’t save verdicts; export before closing.');
+
+  document.querySelectorAll('.verdicts button').forEach(b => b.addEventListener('click', () => {
+    const step = b.dataset.step;
+    b.parentElement.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', 'false'));
+    if (verdicts[step] === b.dataset.v) delete verdicts[step];
+    else { verdicts[step] = b.dataset.v; b.setAttribute('aria-pressed', 'true'); }
+    status(save() ? `${count()} verdicts saved in this browser.` : 'Not saved; export before closing.');
+  }));
+
+  const payload = () => JSON.stringify({ run: r.id, skill_version: r.skill_version || '', exported: new Date().toISOString(),
+    verdicts: (R.steps||[]).filter(s => verdicts[s.id]).map(s => ({ step: s.id, kind: s.kind || 'checkpoint', traits: traitsOf(s), verdict: verdicts[s.id] })) }, null, 2);
+
+  document.getElementById('export').addEventListener('click', () => {
+    try {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([payload()], { type: 'application/json' }));
+      a.download = `verdicts-${r.id || 'run'}.json`;
+      document.body.appendChild(a); a.click(); a.remove();
+      status('Downloaded.');
+    } catch (e) { status('Download unavailable here; use Copy.'); }
+  });
+  document.getElementById('copy').addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(payload()); status('Copied.'); } catch (e) { status('Clipboard unavailable.'); }
+  });
+  document.getElementById('clear').addEventListener('click', () => {
+    verdicts = {}; save();
+    document.querySelectorAll('.verdicts button').forEach(x => x.setAttribute('aria-pressed', 'false'));
+    status('Verdicts cleared.');
+  });
+})();
+</script>
+</body>
+</html>

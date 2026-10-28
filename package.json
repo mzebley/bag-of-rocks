@@ -1,0 +1,29 @@
+{
+  "name": "bag-of-rocks",
+  "version": "0.4.1",
+  "private": true,
+  "description": "Synthetic UX walkthrough skill with frozen tester packets and an annotated evidence filmstrip",
+  "license": "MIT",
+  "files": [
+    "LICENSE",
+    "SKILL.md",
+    "CHANGELOG.md",
+    "references/*.md",
+    "scripts/*.py",
+    "assets/filmstrip.html",
+    "examples/*.json",
+    "docs/*.md",
+    "docs/installed-source-sha256.json",
+    "tests/*.py"
+  ],
+  "keywords": [
+    "agent-skill",
+    "ux",
+    "usability",
+    "synthetic-testing"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mzebley/bag-of-rocks.git"
+  }
+}

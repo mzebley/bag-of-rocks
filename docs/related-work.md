@@ -1,0 +1,20 @@
+# Public overlap research
+
+Preliminary search on 2026-10-28 across public GitHub, npm, and skills.sh. This is a bounded review of documented capabilities, not an exhaustive novelty search or a hands-on benchmark. No other tools were installed or executed.
+
+The comparison is by actual use case: Bag of Rocks deliberately gives a confused but goal-driven persona no intended route, then delivers a chronological filmstrip of cues, expectations, actions, results, and divergences for review. A shared UX-testing category alone does not make another project a direct competitor.
+
+| Project / primary source | Overlap | Practical distinction from this skill |
+| --- | --- | --- |
+| [UXAgent](https://github.com/neuhai/UXAgent), [authors' paper](https://arxiv.org/abs/2504.09407) | Adjacent academic research: persona-driven website use, traces/screenshots, and early usability studies. | Its README documents demographic/persona generation, single/batch tasks, questionnaires and run artifacts; the paper also describes replay. Bag of Rocks focuses on an intentionally confused, uncoached persona and a reviewed action-by-action filmstrip. Equivalent persona constraints, hidden-path comparison and report workflow were not verified. UXAgent is related research here, not an established direct competitor. |
+| [AI User Testing Tool](https://github.com/Dream-Dimension/AI-User-Testing) | Simulated-user feedback as a first pass before real user testing. | A frontend/backend application requiring an API key. Bag of Rocks distributes instructions, two helpers and a portable filmstrip. The README alone does not establish all methodological differences. |
+| [Agentic Usability](https://github.com/PSPDFKit-labs/agentic-usability), [npm package](https://www.npmjs.com/package/@pspdfkit-labs/agentic-usability) | Separates generation/execution/judging, hides private information from executors, saves evidence. npm registry returned 0.2.0. | Benchmarks how coding agents use an SDK and compares solutions against reference implementations. It does not claim to simulate a nervous person navigating a rendered consumer UI. |
+| [Designer Skills](https://github.com/owl-listener/designer-skills), [heuristic-evaluation catalog entry](https://www.skills.sh/owl-listener/designer-skills/heuristic-evaluation) | UX inspection, heuristic review and walkthroughs. The catalog explicitly describes an expert evaluator and new/experienced-user walkthroughs. | Bag of Rocks separates constrained tester behavior from expert review and produces a frozen, annotated behavioral trace. The inspected catalog excerpt does not establish an equivalent blinding protocol. |
+
+Positioning: an uncoached, deliberately confused user with a goal, followed by a timeline that makes each misread and detour reviewable. This is a narrower job than generic UX testing or research-study simulation. Persona agents and replay also appear in other work; they are not claimed as inventions. None of these comparisons demonstrated a drop-in equivalent to the complete installed protocol; that is an observation about this search, not proof none exists.
+
+Queries included “AI agent skill synthetic persona usability testing GitHub UX walkthrough”, “site:skills.sh usability testing persona”, “site:npmjs.com synthetic user usability testing”, “site:npmjs.com usability agent”, and “bag-of-rocks skill npm”. Search results were checked against primary repositories and the npm registry. The npm website denied direct page retrieval (403), so package metadata and README were read with `npm view`; no package execution was needed.
+
+The UXAgent [primary README](https://raw.githubusercontent.com/neuhai/UXAgent/master/README.md) was rechecked on 2026-10-28 for its single/batch tasks, generated personas, questionnaires and output artifacts. It supports the related-research classification; a complete workflow-parity assessment was not performed.
+
+The [skills CLI](https://github.com/vercel-labs/skills) already installs skills from GitHub and supports Codex and Claude Code. A custom npm CLI is unnecessary for the initial release.

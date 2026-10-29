@@ -40,15 +40,15 @@ Every confirmed rock in the library is a known blind spot on a real product. Whi
 
 ## Source 3: Reviewer plausibility verdicts
 
-The filmstrip has a verdict control on each step: **plausible**, **too smart**, **too dumb**, **random**. Selections persist in the browser until exported. The reviewer marks steps, then exports JSON to `.bag-of-rocks/calibration/verdicts/`.
+Generate a calibration filmstrip with `python3 scripts/trace_to_run.py <run-folder> --filmstrip --calibration`. Each step shows **Plausible**, **Too expert**, **Overplayed confusion**, and **Unmotivated action**. Selections persist in the browser; export them to keep a portable record. Ordinary filmstrips omit these controls. The reviewer marks steps, then exports JSON to `.bag-of-rocks/calibration/verdicts/`.
 
 Read verdicts as evidence about behavior, not about tags. A step can be plausible while its trait tag is wrong; check tag fit separately during review.
 
 Patterns to look for:
 
-- **Too smart** clustered on one kind of moment (reading evidence, weighing confidence, finding a hidden control) → tighten the trait that should have prevented it.
-- **Too dumb** clustered on one trait → its trigger is too broad.
-- **Random** anywhere → the coherence rule broke; treat it as a skill defect.
+- **Too expert** clustered on one kind of moment (reading evidence, weighing confidence, finding a hidden control) → tighten the trait that should have prevented it.
+- **Overplayed confusion** clustered on one trait → its trigger is too broad.
+- **Unmotivated action** anywhere → the coherence rule broke; treat it as a skill defect.
 - A behavior the coordinator assumed was a harness error but the reviewer marks **plausible** (for example an early abandonment) → it's persona behavior; fix the labeling, not the behavior.
 
 Verdicts from one reviewer on a handful of runs are expert judgment, not human-behavior evidence, and a run where nearly everything is marked plausible may reflect agreement or acquiescence. Report them as `reviewer verdicts only (<n> steps, <date>)`.

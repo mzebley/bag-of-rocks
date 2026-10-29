@@ -91,6 +91,17 @@ class HarnessTests(unittest.TestCase):
         self.assertEqual(self.call('trace_to_run.py',self.run).returncode,0)
         self.assertEqual((self.run/'run.json').read_text(),'{"reviewer":"keep"}')
 
+    def test_calibration_is_explicit_and_does_not_change_run_data(self):
+        self.assertNotEqual(self.call('trace_to_run.py', self.run, '--calibration').returncode, 0)
+        self.trace()
+        self.assertEqual(self.call('trace_to_run.py', self.run).returncode, 0)
+        original = (self.run/'run.json').read_bytes()
+        for flags, enabled in [(('--calibration',), 'true'), ((), 'false')]:
+            result = self.call('trace_to_run.py', self.run, '--filmstrip', *flags)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn(f'const CALIBRATION = {enabled};', (self.run/'filmstrip.html').read_text())
+            self.assertEqual(original, (self.run/'run.json').read_bytes())
+
     def test_filmstrip_embeds_json_without_closing_script(self):
         self.trace()
         self.assertEqual(self.call('trace_to_run.py',self.run).returncode,0)

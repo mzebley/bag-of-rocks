@@ -4,7 +4,8 @@
 Usage:
     python scripts/trace_to_run.py <run-folder>               # write run.json skeleton + trace-readable.md
     python scripts/trace_to_run.py <run-folder> --force       # overwrite an existing run.json
-    python scripts/trace_to_run.py <run-folder> --filmstrip   # embed the current run.json into filmstrip.html
+    python scripts/trace_to_run.py <run-folder> --filmstrip   # generate a read-only report
+    python scripts/trace_to_run.py <run-folder> --filmstrip --calibration  # enable tester verdicts
 
 Expects <run-folder>/tester/trace.json and screenshots under <run-folder>/tester/.
 Optionally reads <run-folder>/run-params.(yaml|json) and <run-folder>/coordinator/intended-path.json.
@@ -82,12 +83,17 @@ def main():
         sys.exit(__doc__)
     folder = Path(args[0]).expanduser().resolve()
     force = "--force" in sys.argv
+    calibration = "--calibration" in sys.argv
+    if calibration and "--filmstrip" not in sys.argv:
+        sys.exit("--calibration requires --filmstrip.")
 
     if "--filmstrip" in sys.argv:
         run_json = folder / "run.json"
         if not run_json.exists():
             sys.exit("No run.json yet. Run without --filmstrip first.")
         template = (SKILL_DIR / "assets" / "filmstrip.html").read_text(encoding="utf-8")
+        if calibration:
+            template = template.replace("const CALIBRATION = false;", "const CALIBRATION = true;", 1)
         data = run_json.read_text(encoding="utf-8").replace("</", "<\\/")
         out = re.sub(r'(<script id="run-data" type="application/json">)(.*?)(</script>)',
                      lambda m: m.group(1) + "\n" + data + "\n" + m.group(3), template, count=1, flags=re.S)
@@ -220,16 +226,17 @@ def main():
         print(f"Run data written: {out_json}")
 
     md = [f"# Trace: {run['run']['goal']}", "",
-          f"Run {run['run']['id']} · preset {run['run']['preset']} · phrasing {run['run']['phrasing']} · mutations {run['run']['mutations']} · perception {run['run']['perception']}", ""]
+          f"Run `{run['run']['id']}` · preset {run['run']['preset']} · phrasing {run['run']['phrasing']} · mutations {run['run']['mutations']} · perception {run['run']['perception']}", ""]
     if entered:
         md += [f"Entered text: `{entered}`", ""]
     for st in steps_out:
-        md.append(f"## {st['id']} ({st['kind']})")
+        md.append(f"## `{st['id']}` · {st['kind']}")
+        md.append("")
         for label, key in (("Cue", "cue"), ("Expectation", "expectation"), ("Action", "action"),
                            ("Entered", "entered_text"), ("Result", "result"), ("Then", "updated"),
                            ("Corrects", "corrects"), ("Note", "note")):
             if st.get(key):
-                md.append(f"- **{label}:** {st[key]}")
+                md.append(f"**{label}:** {st[key]}\n")
         if st["traits"]:
             md.append(f"- **Traits:** {', '.join(st['traits'])}")
         if st["clicks"]:

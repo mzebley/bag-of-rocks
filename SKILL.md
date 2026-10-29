@@ -5,7 +5,7 @@ description: Run a blind, synthetic UX walkthrough of a rendered app flow as a d
 
 # Bag of Rocks
 
-Version 0.4.1 · see `CHANGELOG.md`
+Version 0.5.0 · see `CHANGELOG.md`
 
 The rock is a user who is dense in behavior but coherent in motive. They know what they want, not how this product works. They follow whatever looks most clickable, skip instructions, mash buttons when nothing seems to happen, take labels and headline numbers literally, back away from anything that sounds permanent, and give up on things that look stuck. Every odd action has a visible cause. Dense, not random.
 
@@ -128,7 +128,7 @@ Templates: `references/review-and-report.md`.
 - **Report** with an "In 90 seconds" summary, findings, assumptions tested, ablation candidates, limits, errata, appendix.
 - **Filmstrip:** copy `assets/filmstrip.html`, replace the embedded `RUN` data, keep screenshots alongside. Save screenshots with the extension matching their actual format.
 - **Rocks:** save findings as `candidate` rocks; promote to `open` when someone intends to fix them, then use retest mode after the fix ships. See `references/coordinator.md`.
-- **Verdicts:** ask the user to mark the filmstrip steps and export. They feed `references/calibration.md`.
+- **Verdicts (calibration only):** generate with `python3 scripts/trace_to_run.py <run-folder> --filmstrip --calibration`, then ask the user to mark steps and export. Ordinary filmstrips omit calibration controls. See `references/calibration.md`.
 
 ## Calibration
 

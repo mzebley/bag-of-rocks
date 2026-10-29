@@ -1,6 +1,6 @@
 # Distribution record
 
-2026-10-28: Mark Zebley confirmed ownership of the imported skill and approved the MIT license. GitHub is the initial public distribution channel at https://github.com/mzebley/bag-of-rocks. The skill baseline remains 0.4.1; the changelog separately records public packaging changes.
+2026-10-28: Mark Zebley confirmed ownership of the imported skill and approved the MIT license. GitHub is the initial public distribution channel at https://github.com/mzebley/bag-of-rocks. The initial public distribution used the installed 0.4.1 baseline. Version 0.5.0 adds the Evidence ledger templates and opt-in tester calibration; see the changelog for details.
 
 The release preparation checked the GitHub identity and repository availability before creation. It used the reviewed project copy, leaving the installed skill directory unchanged.
 

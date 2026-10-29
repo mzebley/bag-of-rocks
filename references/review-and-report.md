@@ -65,7 +65,7 @@ The reviewer converts the frozen trace into the filmstrip's `RUN` object. Pixel 
 
 ```json
 {
-  "run": { "id": "", "date": "", "goal": "", "start": "", "preset": "", "traits": [], "phrasing": "", "entered_text": "", "mutations": "", "conditions": [], "perception": "", "mode": "", "skill_version": "0.4.0" },
+  "run": { "id": "", "date": "", "goal": "", "start": "", "preset": "", "traits": [], "phrasing": "", "entered_text": "", "mutations": "", "conditions": [], "perception": "", "mode": "", "skill_version": "0.5.0" },
   "outcome": { "believed": "", "supported": "", "gap": "" },
   "summary": [ { "finding": "F1", "headline": "", "step": "C3" } ],
   "intended": [ { "id": "I1", "screen": "", "cue": "", "action": "" } ],
@@ -121,15 +121,52 @@ Copy and page-level hierarchy problems often aren't component problems; say so.
 
 ## Report template
 
-```text
-# Bag of Rocks: <goal>  (<run ID>, skill 0.4.0)
+Use the Evidence ledger hierarchy in generated reports: a goal heading, a compact run header, and one section per finding with its stable ID. Keep observations, interpretation, and proposed fixes separate. HTML uses the system-font styles in `assets/filmstrip.html`; Markdown keeps the same hierarchy with headings, code-formatted IDs, and labeled paragraphs. Avoid decorative cards, nested badges, and wide tables for prose. Screenshots keep their original aspect ratio; before/after pairs stack on narrow screens.
+
+```markdown
+# Bag of Rocks: <goal>
+
+Run: `<run ID>` · Skill: `<version>` · Preset: `<preset>`
 
 ## In 90 seconds
-<What the rock believed vs. what evidence supports.>
+
+**Rock believed:** <belief>
+
+**Evidence supports:** <outcome and supporting evidence>
+
+**Gap:** <difference, or none noted>
+
 <The findings the evidence supports, most costly first. No quota. One sentence each, with step, trait, smallest fix.>
 
 ## Findings
-For each: ID, category, title · source (rock-exposed / reviewer-observed) · where (checkpoints, screenshots, intended step) · expected vs. observed · cost · traits · component and basis · interpretation and alternative explanations · smallest fix, success signal, regression to watch · ablation that would test it · rock status (candidate / open)
+
+### `<finding ID>` · <title>
+
+<category> · <rock-exposed / reviewer-observed> · <candidate / open>
+
+**Evidence:** <linked checkpoints and screenshots; intended step>
+
+**Expected:** <expected behavior>
+
+**Observed:** <what happened>
+
+**Cost:** <consequence>
+
+**Traits:** <traits that contributed>
+
+**Component:** <component and inferred / reproduced basis>
+
+**Interpretation:** <explanation and alternatives>
+
+**Smallest fix:** <proposed change>
+
+**Success signal:** <observable result after the fix>
+
+**Watch for:** <regression risk>
+
+**Ablation:** <one-variable test>
+
+<Repeat the finding section as needed.>
 
 ## Recurrence
 Patterns also seen in other runs (run IDs), and recurring harness artifacts that need a deterministic check.

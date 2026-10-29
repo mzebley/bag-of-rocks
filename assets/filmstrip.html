@@ -12,63 +12,88 @@
   Steps with an empty "screenshot" render a labeled placeholder.
 -->
 <style>
+/* Evidence ledger: system fonts, one spacing scale, shared report primitives. */
 :root{
-  --bg:#f7f6f3;--surface:#ffffff;--ink:#1d1d1b;--muted:#5f5e5a;--line:#dddbd4;
-  --accent:#2f5bd3;--accent-ink:#ffffff;--bubble:#fff6d6;--bubble-ink:#3a3000;
-  --bad:#b3261e;--warn:#9a5b00;--ok:#1e6b3a;--alt:#5b4bb3;--hatch:rgba(120,120,120,.35);
-  color-scheme:light;
-  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+  color-scheme:light dark;
+  --bg:light-dark(#f6f7f8,#191d21);--surface:light-dark(#fff,#20262c);
+  --ink:light-dark(#252a30,#e3e8ed);--muted:light-dark(#58616b,#b2bdc8);
+  --line:light-dark(#bac2cb,#4f5c67);--accent:light-dark(#294f70,#b4d4f0);
+  --accent-ink:light-dark(#fff,#191d21);--tint:light-dark(#e9edf1,#28323b);
+  --bad:light-dark(#a02d27,#ffaaa4);--warn:light-dark(#77500d,#edc47e);
+  --alt:var(--accent);--hatch:light-dark(#58616b30,#b2bdc830);
+  --mono:ui-monospace,SFMono-Regular,Consolas,monospace;
+  --space:8px;
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#141413;--surface:#1f1f1d;--ink:#ecebe6;--muted:#a9a7a0;--line:#3a3935;
-  --accent:#8aa6ff;--accent-ink:#0d1330;--bubble:#3a3417;--bubble-ink:#fff2b8;
-  --bad:#ff8a80;--warn:#ffb74d;--ok:#7bd88f;--alt:#b9adff;--hatch:rgba(200,200,200,.28);color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#141413;--surface:#1f1f1d;--ink:#ecebe6;--muted:#a9a7a0;--line:#3a3935;
-  --accent:#8aa6ff;--accent-ink:#0d1330;--bubble:#3a3417;--bubble-ink:#fff2b8;
-  --bad:#ff8a80;--warn:#ffb74d;--ok:#7bd88f;--alt:#b9adff;--hatch:rgba(200,200,200,.28);color-scheme:dark}
-*,*::before,*::after{box-sizing:inherit}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-main{max-width:1100px;margin:0 auto;padding:1.5rem 1rem 4rem}
-h1{font-size:1.5rem;margin:0 0 .25rem}h2{font-size:1.15rem;margin:2rem 0 .75rem}
-.meta{color:var(--muted);font-size:.9rem}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:1rem}
-.outcome{display:grid;gap:.5rem;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));margin-top:1rem}
-.label{font-size:.75rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
-.chip{display:inline-block;font-size:.75rem;font-weight:600;padding:.1rem .5rem;border-radius:999px;border:1px solid currentColor}
-.k-unrecovered,.c-breakage{color:var(--bad)}.k-recovered,.c-misleading{color:var(--warn)}.k-alternate{color:var(--alt)}.c-confusion{color:var(--alt)}
-.summary li{margin:.4rem 0}.summary a{color:var(--accent)}
-.rail{display:flex;gap:.5rem;overflow-x:auto;padding-bottom:.25rem}
-.rail .card{min-width:180px;font-size:.85rem}
-.step{display:grid;gap:1rem;grid-template-columns:minmax(0,3fr) minmax(0,2fr);margin:1rem 0}
-@media (max-width:760px){.step{grid-template-columns:1fr}}
-.shot{position:relative;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--surface)}
-.shot img{display:block;width:100%;max-width:100%;height:auto}
-.ph{aspect-ratio:16/10;display:grid;place-items:center;color:var(--muted);font-size:.9rem}
-.click{position:absolute;transform:translate(-50%,-50%);width:30px;height:30px;border-radius:50%;
-  background:var(--accent);color:var(--accent-ink);font-weight:700;font-size:.8rem;display:grid;place-items:center;
-  box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 30%,transparent)}
-.click .rep{position:absolute;top:-10px;right:-18px;background:var(--bad);color:#fff;border-radius:999px;padding:0 .35rem;font-size:.7rem}
-.ignored{position:absolute;border:2px dashed var(--muted);
-  background:repeating-linear-gradient(45deg,var(--hatch) 0 6px,transparent 6px 12px)}
-.ignored span{position:absolute;bottom:100%;left:0;font-size:.68rem;background:var(--surface);color:var(--muted);padding:0 .3rem;border-radius:4px;white-space:nowrap}
-.bubble{background:var(--bubble);color:var(--bubble-ink);border-radius:12px;padding:.6rem .8rem;position:relative;margin:.25rem 0 .75rem}
-.bubble::before{content:"Expects";display:block;font-size:.7rem;font-weight:700;text-transform:uppercase;opacity:.75}
-dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:.25rem .75rem;font-size:.92rem}dt{color:var(--muted)}dd{margin:0}
-.verdicts{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.75rem}
-.verdicts button,.btn{font:inherit;font-size:.8rem;padding:.3rem .6rem;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+:root[data-theme="light"]{color-scheme:light}
+:root[data-theme="dark"]{color-scheme:dark}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:1080px;margin:auto;padding:max(32px,env(safe-area-inset-top)) max(24px,env(safe-area-inset-right)) max(64px,env(safe-area-inset-bottom)) max(24px,env(safe-area-inset-left));overflow-wrap:anywhere}
+h1,h2,h3{line-height:1.2;font-weight:600;text-wrap:balance}
+h1{font-size:clamp(1.8rem,4vw,2.75rem);letter-spacing:-.035em;margin:16px 0;max-width:28ch}
+h2{font-size:1.4rem;letter-spacing:-.02em;margin:40px 0 16px}
+h3{font-size:1.1rem;margin:8px 0 16px}
+p{margin:0 0 16px}
+a{color:var(--accent);text-underline-offset:.2em}
+.meta,.label,.tag,.step-id{font: .8125rem/1.6 var(--mono);color:var(--muted)}
+header .meta{max-width:90ch}
+.label{margin:0 0 16px}
+.card{padding:16px 0}
+.outcome{display:grid;gap:24px;grid-template-columns:repeat(3,minmax(0,1fr));border-block:1px solid var(--line);margin-top:24px}
+.outcome .label{margin-bottom:8px}
+.outcome .card{min-width:0}
+.chip{display:inline-block;font: .8125rem/1.6 var(--mono);margin:0 12px 4px 0}
+.k-unrecovered,.c-breakage{color:var(--bad)}
+.k-recovered,.c-misleading{color:var(--warn)}
+.k-alternate,.c-confusion{color:var(--alt)}
+.summary{padding:0 0 0 24px;max-width:75ch}
+.summary li{padding:0 0 8px 8px}
+.rail{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px}
+.rail .card{border-top:1px solid var(--line);font-size:.875rem}
+.step{display:grid;grid-template-columns:72px minmax(0,1fr);gap:24px;padding:24px 0;margin:0}
+.step-id{color:var(--accent);padding-top:4px;font-variant-numeric:tabular-nums}
+.step-body{border-left:1px solid var(--line);padding-left:24px;min-width:0}
+.step .label{margin:16px 0}
+.shot{position:relative;border:1px solid var(--line);background:var(--surface)}
+.shot img{display:block;width:100%;height:auto}
+.ph{min-height:180px;display:grid;place-items:center;padding:24px;color:var(--muted);font-size:.875rem}
+.pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.pair figure{margin:0;min-width:0}
+.pair figcaption{margin:0 0 8px}
+.click{position:absolute;transform:translate(-50%,-50%);width:30px;height:30px;border-radius:50%;background:var(--accent);color:var(--accent-ink);font:600 .8rem/1 var(--mono);display:grid;place-items:center;box-shadow:0 0 0 3px var(--surface)}
+.click .rep{position:absolute;top:-12px;right:-18px;background:var(--surface);color:var(--bad);padding:3px;border:1px solid var(--bad)}
+.click.approx{background:var(--surface);color:var(--accent);border:2px dashed var(--accent);box-shadow:none}
+.ignored{position:absolute;border:2px dashed var(--muted);background:repeating-linear-gradient(45deg,var(--hatch) 0 6px,transparent 6px 12px)}
+.ignored span{position:absolute;bottom:100%;left:0;max-width:100%;font-size:.75rem;background:var(--surface);color:var(--ink);padding:0 4px}
+.bubble{border-left:3px solid var(--accent);padding:0 0 0 16px;margin:24px 0;font-size:1.125rem;max-width:65ch}
+.bubble::before{content:"Expects";display:block;font:.8125rem/1.6 var(--mono);color:var(--muted);margin-bottom:4px}
+dl{margin:0;display:grid;grid-template-columns:110px minmax(0,1fr);gap:var(--space) 16px;max-width:85ch}
+dt{font:.8125rem/1.8 var(--mono);color:var(--muted)}dd{margin:0;min-width:0}
+.verdicts,.toolbar{display:flex;flex-wrap:wrap;gap:var(--space);margin-top:24px}
+.verdicts button,.btn{font:inherit;font-size:.875rem;min-height:44px;padding:var(--space) 12px;border-radius:3px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.verdicts button:hover,.btn:hover{border-color:var(--accent);background:var(--tint)}
 .verdicts button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
-.click.approx{background:transparent;color:var(--accent);border:2px dashed var(--accent);box-shadow:none}
-.pair{display:grid;gap:.5rem}.pair .tag{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.verdicts button:active,.btn:active{box-shadow:inset 0 0 0 1px currentColor}
 .step.wait .bubble{display:none}
-.step.reviewer{border-style:dashed}
-.harness{font-size:.85rem;color:var(--warn)}
-.entered{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.85rem;background:var(--bg);padding:.1rem .3rem;border-radius:4px}
-.untested{color:var(--warn);font-weight:600;font-size:.85rem}
-.finding{margin:.75rem 0}.finding h3{font-size:1rem;margin:.25rem 0}
-.toolbar{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1rem}
-:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.step.wait .step-body,.step.reviewer .step-body{border-left-style:dashed}
+.harness,.untested{color:var(--warn);margin-top:16px}
+.entered{font-family:var(--mono);font-size:.875rem;background:var(--tint);padding:2px 4px}
+.finding{border-top:1px solid var(--line);margin-top:24px}
+ul.card{padding-left:24px;max-width:85ch}
+.toolbar{border-top:1px solid var(--line);padding-top:24px;align-items:center}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+@media(max-width:680px){
+ main{padding:24px 16px 48px}.outcome,.pair{grid-template-columns:1fr}.outcome{gap:0}
+ .outcome .card+.card{border-top:1px solid var(--line)}
+ .step{grid-template-columns:1fr;gap:var(--space)}.step-body{padding-left:16px}
+ dl{grid-template-columns:1fr;gap:4px}dd{margin-bottom:12px}
+}
+@media print{
+ :root{color-scheme:light}body{background:#fff}main{max-width:none;padding:0;font-size:11pt}
+ .verdicts,.toolbar{display:none}.step{grid-template-columns:48px minmax(0,1fr)}
+ .pair{grid-template-columns:repeat(2,minmax(0,1fr))}h2,h3,dt{break-after:avoid}
+ figure,.shot,.outcome{break-inside:avoid}a{color:inherit}.step-body{border-color:var(--line)}
+}
 </style>
 </head>
 <body>
@@ -76,7 +101,7 @@ dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:.25rem .75rem;font-s
 
 <script id="run-data" type="application/json">
 {
-  "run": {"id":"demo-run","date":"2026-10-27","goal":"Change my mailing address to 12 Elm St.","start":"https://staging.example.test/","preset":"full-bag","traits":["VPF","HTS","FC:3","LIT","NR","LP"],"phrasing":"own-words","entered_text":"","mutations":"allowed","conditions":["slow-network"],"perception":"mixed","mode":"fast","skill_version":"0.4.1"},
+  "run": {"id":"demo-run","date":"2026-10-27","goal":"Change my mailing address to 12 Elm St.","start":"https://staging.example.test/","preset":"full-bag","traits":["VPF","HTS","FC:3","LIT","NR","LP"],"phrasing":"own-words","entered_text":"","mutations":"allowed","conditions":["slow-network"],"perception":"mixed","mode":"fast","skill_version":"0.5.0"},
   "outcome": {"believed":"Address updated (saw a green check)","supported":"uncertain","gap":"Check appeared, but the address shown still read the old value."},
   "summary": [
     {"finding":"F1","headline":"Save gives no feedback for several seconds, so the rock clicked it 4 times.","step":"C2"}
@@ -101,11 +126,13 @@ dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:.25rem .75rem;font-s
 
 <script>
 (function(){
+  // Set by trace_to_run.py --filmstrip --calibration; ordinary reports stay read-only.
+  const CALIBRATION = false;
   const R = JSON.parse(document.getElementById('run-data').textContent);
   const r = R.run || {};
-  const KEY = 'bag-of-rocks-verdicts:' + (r.id || 'run');
+  const KEY = 'bag-of-rocks-calibration:' + (r.id || 'run');
   let verdicts = {};
-  try { verdicts = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { verdicts = {}; }
+  if (CALIBRATION) try { verdicts = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { verdicts = {}; }
   const save = () => { try { localStorage.setItem(KEY, JSON.stringify(verdicts)); return true; } catch (e) { return false; } };
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const arr = v => Array.isArray(v) ? v : (v ? String(v).split(/,\s*/) : []);
@@ -145,7 +172,7 @@ dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:.25rem .75rem;font-s
       `<div class="ignored" style="left:${+g.x}%;top:${+g.y}%;width:${+g.w}%;height:${+g.h}%" aria-hidden="true"><span>not read: ${esc(g.label)}</span></div>`).join('');
     const before = shot(s.screenshot, `Screenshot ${s.id}${s.cue ? ': ' + s.cue : ''}`, ign + marks);
     const visual = s.result_screenshot
-      ? `<div class="pair"><span class="tag">Before</span>${before}<span class="tag">After</span>${shot(s.result_screenshot, 'Result of ' + s.id, '')}</div>`
+      ? `<div class="pair"><figure><figcaption class="tag">Before</figcaption>${before}</figure><figure><figcaption class="tag">After</figcaption>${shot(s.result_screenshot, 'Result of ' + s.id, '')}</figure></div>`
       : before;
     const d = s.divergence;
     const dv = d ? `<p><span class="chip k-${esc(d.kind)}">${esc(d.kind)} divergence from ${esc(d.from)}</span> <span class="meta">${esc(d.note)}</span></p>` : '';
@@ -153,8 +180,9 @@ dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:.25rem .75rem;font-s
     const ignText = (s.ignored||[]).map(g => esc(g.label)).join('; ');
     const head = kind === 'wait' ? `Wait · ${esc(s.id)}` : kind === 'correction' ? `Tester correction to ${esc(s.corrects)} · ${esc(s.id)}` : kind === 'reviewer' ? `Reviewer-added · ${esc(s.id)}` : `Step ${n} · ${esc(s.id)}`;
     h += `<article class="step card ${kind}" id="step-${esc(s.id)}">
-      ${visual}
-      <div>
+      <div class="step-id">${esc(s.id)}</div>
+      <div class="step-body">
+        ${visual}
         <p class="label">${head}${traitsOf(s).length ? ' · ' + traitsOf(s).map(t => `<span class="chip">${esc(t)}</span>`).join(' ') : ''}</p>
         ${dv}
         ${s.expectation ? `<div class="bubble">${esc(s.expectation)}</div>` : ''}
@@ -169,9 +197,9 @@ dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:.25rem .75rem;font-s
         </dl>
         ${s.harness_note ? `<p class="harness">Harness: ${esc(s.harness_note)}</p>` : ''}
         ${s.untested ? `<p class="untested">Untested commit (mutations: none): recorded as intent only.</p>` : ''}
-        <div class="verdicts" role="group" aria-label="Plausibility verdict for ${esc(s.id)}">
-          ${['plausible','too smart','too dumb','random'].map(v => `<button type="button" aria-pressed="${verdicts[s.id]===v}" data-step="${esc(s.id)}" data-v="${v}">${v}</button>`).join('')}
-        </div>
+        ${CALIBRATION ? `<p class="label">Tester calibration</p><div class="verdicts" role="group" aria-label="Tester calibration for ${esc(s.id)}">
+          ${['Plausible','Too expert','Overplayed confusion','Unmotivated action'].map(v => `<button type="button" aria-pressed="${verdicts[s.id]===v}" data-step="${esc(s.id)}" data-v="${v}">${v}</button>`).join('')}
+        </div>` : ''}
       </div></article>`;
   });
 
@@ -196,7 +224,7 @@ dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:.25rem .75rem;font-s
   if ((R.limits||[]).length) h += `<h2>Limits</h2><ul class="card">` + R.limits.map(l => `<li>${esc(l)}</li>`).join('') + `</ul>`;
   if ((R.errata||[]).length) h += `<h2>Errata (append-only)</h2><ul class="card">` + R.errata.map(x => `<li><strong>${esc(x.date)} · ${esc(x.about)}:</strong> ${esc(x.correction)}</li>`).join('') + `</ul>`;
 
-  h += `<div class="toolbar">
+  if (CALIBRATION) h += `<div class="toolbar" aria-label="Tester calibration exports">
     <button class="btn" id="export">Download verdicts (JSON)</button>
     <button class="btn" id="copy">Copy verdicts</button>
     <button class="btn" id="clear">Clear verdicts</button>
@@ -204,6 +232,8 @@ dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:.25rem .75rem;font-s
 
   document.getElementById('app').innerHTML = h;
   document.title = 'Bag of Rocks · ' + (r.goal || r.id || 'filmstrip');
+  if (!CALIBRATION) return;
+
   const status = msg => { document.getElementById('status').textContent = msg; };
   const count = () => Object.keys(verdicts).length;
   status(save() ? (count() ? `${count()} verdicts restored from this browser.` : 'Verdicts save automatically in this browser.') : 'This browser can’t save verdicts; export before closing.');

@@ -6,7 +6,7 @@ Bag of Rocks is a synthetic UX walkthrough skill. Its tester acts as someone who
 
 A coordinator records the intended path and keeps it from the tester. The tester works through the rendered screens, then a reviewer compares its recorded actions with that path. You get an annotated screenshot filmstrip, findings linked to evidence, and saved findings called “rocks” for later regression checks.
 
-**Version:** 0.4.1 · [MIT license](LICENSE) · [Changelog](CHANGELOG.md) · [Provenance](docs/provenance.md)
+**Version:** 0.5.0 · [MIT license](LICENSE) · [Changelog](CHANGELOG.md) · [Provenance](docs/provenance.md)
 
 Use the findings as hypotheses to investigate. They don't establish how real people behave, how many would fail, or whether a product meets accessibility standards.
 
@@ -16,7 +16,7 @@ Use the findings as hypotheses to investigate. They don't establish how real peo
 - Fast, multi-persona, ablation, retest, and regression workflows.
 - A deterministic packet builder with a SHA-256 digest and neutrality warnings.
 - A trace converter that preserves tester files and flags evidence problems.
-- A self-contained HTML filmstrip with reviewer verdict export.
+- A self-contained HTML filmstrip with optional tester calibration controls.
 
 The agent performs the walkthrough. These Python scripts do not launch or control a browser, create a sandbox, or enforce permissions.
 
@@ -81,6 +81,8 @@ python3 scripts/trace_to_run.py /path/to/run
 # Reviewer fills outcome, summary, findings, and divergences in run.json.
 python3 scripts/trace_to_run.py /path/to/run --filmstrip
 ```
+
+For tester calibration, add `--calibration` to the `--filmstrip` command. This enables plausibility verdicts and their export controls; ordinary reports omit them.
 
 Convert only trusted local traces, and inspect them first. The converter is not hardened for arbitrary downloaded inputs. It reads PNG and JPEG dimensions, but cannot decode WebP dimensions. Keep the tester directory unchanged and include conversion warnings in the report’s Limits section.
 

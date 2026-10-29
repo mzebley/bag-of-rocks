@@ -1,4 +1,4 @@
-# Public overlap research
+# Related work
 
 Preliminary search on 2026-10-28 across public GitHub, npm, and skills.sh. This is a bounded review of documented capabilities, not an exhaustive novelty search or a hands-on benchmark. No other tools were installed or executed.
 

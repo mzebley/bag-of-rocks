@@ -1,14 +1,14 @@
 # Bag of Rocks
 
-Give an agent a goal, keep it uncoached, and watch where a deliberately confused user gets stuck—then review an annotated timeline of what happened.
+Give an agent a goal without showing it the route. Watch where it gets stuck, then review an annotated timeline of what happened.
 
-Bag of Rocks is a synthetic UX walkthrough skill built around an unfamiliar, nervous, low-tech-confidence persona.
+Bag of Rocks is a synthetic UX walkthrough skill. Its tester acts as someone who's unfamiliar with the product, nervous about making mistakes, and unsure around technology.
 
-A coordinator hides the intended path, a fresh tester follows a constrained persona through rendered screens, and a reviewer compares the frozen trace against the answer key. The output is an annotated screenshot filmstrip, evidence-linked findings, and reusable regression “rocks.”
+A coordinator records the intended path and keeps it from the tester. The tester works through the rendered screens, then a reviewer compares its recorded actions with that path. You get an annotated screenshot filmstrip, findings linked to evidence, and saved findings called “rocks” for later regression checks.
 
-**Version:** based on installed **0.4.1**, shared under the [MIT license](LICENSE). Historical observations are preserved in [CHANGELOG.md](CHANGELOG.md); see [provenance](docs/provenance.md).
+**Version:** 0.4.1 · [MIT license](LICENSE) · [Changelog](CHANGELOG.md) · [Provenance](docs/provenance.md)
 
-This produces synthetic hypotheses, not real-user research, population failure rates, or accessibility conformance evidence.
+Use the findings as hypotheses to investigate. They don't establish how real people behave, how many would fail, or whether a product meets accessibility standards.
 
 ## What it includes
 
@@ -22,7 +22,9 @@ The agent performs the walkthrough. These Python scripts do not launch or contro
 
 ## Requirements
 
-Use an agent with screenshot-based browser control, filesystem access, and preferably a fresh context for the tester. If only a shared/informed context is available, label that limitation. Python 3 runs the helpers. JSON input uses the standard library; YAML input additionally requires PyYAML. No Node runtime is required to use the skill. Agent/model or browser-provider costs are separate from distributing these files.
+Use an agent with screenshot-based browser control and filesystem access. Give the tester a fresh context when possible; if it already knows the intended path or prior conversation, label the run as an informed pass.
+
+The helpers require Python 3. JSON input needs no additional packages; YAML input requires PyYAML. The skill itself does not require Node.js. Your model and browser providers may charge for usage.
 
 ## Install from a local checkout
 
@@ -34,7 +36,7 @@ destination=/path/to/project/.claude/skills/bag-of-rocks
 test ! -e "$destination" && mkdir -p "$destination" && cp -R SKILL.md CHANGELOG.md LICENSE references scripts assets "$destination/"
 ```
 
-For another agent, copy the same files into its configured skills directory. For an existing Codex installation using `~/.codex/skills`, the destination can be `~/.codex/skills/bag-of-rocks`; inspect an existing copy before replacing it. This preparation did not change the author's installed skill.
+For another agent, copy the same files into its configured skills directory. If your Codex installation uses `~/.codex/skills`, use `~/.codex/skills/bag-of-rocks`. Inspect an existing copy before replacing it.
 
 Install from GitHub with the skills CLI:
 
@@ -42,7 +44,7 @@ Install from GitHub with the skills CLI:
 npx skills add mzebley/bag-of-rocks --skill bag-of-rocks
 ```
 
-That uses the independent [skills CLI](https://github.com/vercel-labs/skills), not a Bag of Rocks executable. The install command follows the CLI documentation; this release was tested by unpacking its files, without modifying an existing agent installation. The CLI currently documents Node.js 22.20+; manual copying does not need Node.
+This command uses the independent [skills CLI](https://github.com/vercel-labs/skills). Check its documentation for Node.js requirements. Release validation covered the unpacked files; it did not test installation through the CLI. Manual copying does not require Node.js.
 
 ## Use it
 
@@ -58,7 +60,9 @@ Preset: full-bag
 Budget: one run, 25 actions
 ```
 
-The URL and address above are fictional examples. Supply your authorized staging URL and scope. The coordinator prepares the intended path and gets it confirmed before handing the frozen packet to a fresh tester. Read [SKILL.md](SKILL.md) for the workflow and [coordinator guidance](references/coordinator.md) for modes and run structure.
+Replace the fictional URL and address with your authorized staging URL and test data. With `Mutations: none`, the tester stops before saving the address and records what it would have done. Use `Mutations: allowed` only when changes are authorized in your sandbox or staging environment.
+
+The coordinator confirms the intended path with you, then gives a fresh tester a fixed packet of instructions that excludes that path. See [SKILL.md](SKILL.md) for the workflow and [coordinator guidance](references/coordinator.md) for modes and run structure.
 
 To try the helper without any browser activity:
 
@@ -78,7 +82,7 @@ python3 scripts/trace_to_run.py /path/to/run
 python3 scripts/trace_to_run.py /path/to/run --filmstrip
 ```
 
-Treat traces as trusted local inputs and inspect them before conversion. The installed converter is not hardened for arbitrary downloaded traces. It reads PNG/JPEG dimensions; WebP is recognized but lacks dimension decoding. Preserve the frozen tester directory and attach warnings to Limits.
+Convert only trusted local traces, and inspect them first. The converter is not hardened for arbitrary downloaded inputs. It reads PNG and JPEG dimensions, but cannot decode WebP dimensions. Keep the tester directory unchanged and include conversion warnings in the report’s Limits section.
 
 ## Validation and contributions
 
@@ -86,8 +90,12 @@ Treat traces as trusted local inputs and inspect them before conversion. The ins
 python3 -m unittest discover -s tests -v
 ```
 
-Tests use disposable files, exercise packet blinding/hash behavior and trace/filmstrip conversion, and never operate a browser. See [validation](docs/validation.md) for evidence and limits. For a change, include a small reproducible fixture, the observed behavior, and the effect on the evidence trail. Do not commit real run screenshots, account data, credentials, or private product examples.
+Tests use disposable files to check packet blinding, hashes, trace conversion, and filmstrip generation. They do not operate a browser. See [validation](docs/validation.md) for the recorded checks and their limits.
+
+When contributing a change, include a small reproducible fixture, the observed behavior, and any effect on the evidence trail. Keep real run screenshots, account data, credentials, and private product examples out of commits.
 
 ## Distribution and related work
 
-GitHub plus skill installation is the simplest first release. npm can carry the same static files later; the private draft intentionally prevents publication until a publishing identity and package name are verified. No service, subscription, or install hook is introduced. See [release checklist](docs/release.md) and [public overlap research](docs/related-work.md). Related research explores simulated users too. Bag of Rocks focuses on an uncoached, goal-driven persona and a chronological evidence report; the comparison does not establish a direct substitute for that workflow.
+Install the skill from GitHub or a local checkout. The npm packaging draft is marked private and is not ready for publication. See the [distribution record](docs/release.md) for details.
+
+[Related work](docs/related-work.md) covers other approaches to simulated users and UX inspection. Bag of Rocks focuses on an uncoached persona pursuing a goal, with a chronological record for review. The comparison is preliminary, not a benchmark.

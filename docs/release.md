@@ -2,7 +2,7 @@
 
 2026-10-28: Mark Zebley confirmed ownership of the imported skill and approved the MIT license. GitHub is the initial public distribution channel at https://github.com/mzebley/bag-of-rocks. The skill baseline remains 0.4.1; the changelog separately records public packaging changes.
 
-GitHub connector and authenticated `gh api user` identify `mzebley`. Repository absence was rechecked before creation; no existing repository was overwritten. Publication uses the reviewed project copy, not the installed skill directory. Tests and staged-file review precede the public push. Local commit author metadata uses the account's GitHub noreply address.
+The release preparation checked the GitHub identity and repository availability before creation. It used the reviewed project copy, leaving the installed skill directory unchanged.
 
 ## Optional npm distribution — not published
 

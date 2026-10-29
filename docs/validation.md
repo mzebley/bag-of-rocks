@@ -9,7 +9,7 @@
 
 No live app walkthrough, browser/VoiceOver session, persona calibration, or competing product execution was performed. These tests validate helper behavior, not usability findings or persona realism.
 
-## Baseline limitations worth preserving in release notes
+## Known limitations
 
 - The packet is instruction-based isolation, not a filesystem sandbox. The coordinator must carry safety boundaries into prohibited_effects. A fresh context alone does not deny file access.
 - Strict packet lint reports failure after writing output; warnings must be resolved before handing off those files.
@@ -18,4 +18,4 @@ No live app walkthrough, browser/VoiceOver session, persona calibration, or comp
 - The documented intended-path example uses intended_cue/intended_action, while the optional JSON converter expects cue/action. When producing coordinator/intended-path.json, use the converter's cue/action keys; otherwise fill the intended path during review.
 - The installed changelog describes prior private runs and reviewer verdicts. Those claims are not a transferable calibration certificate for future runs.
 
-The release preparation does not change the installed helpers. These limitations should guide follow-up changes rather than silently rewriting the 0.4.1 baseline.
+These limitations apply to the imported 0.4.1 helpers. The release preparation added packaging and tests without changing their behavior.

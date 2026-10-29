@@ -2,6 +2,8 @@
 
 ## 0.5.0 (2026-10-28)
 
+- Prepared public npm distribution as `bag-of-rocks`, with explicit package contents and archive installation guidance.
+
 - Applied the Evidence ledger layout to filmstrips, report templates, and readable traces: system fonts, monospace evidence IDs, restrained dividers, responsive screenshots, and print styling.
 - Filmstrips omit tester verdicts and export/reset controls by default. Generate with `--filmstrip --calibration` to enable tester calibration.
 - Replaced verdict choices with Plausible, Too expert, Overplayed confusion, and Unmotivated action. Saved verdicts use a new browser storage key; previous labels and stored verdicts are not migrated. Historical changelog entries retain their original wording.

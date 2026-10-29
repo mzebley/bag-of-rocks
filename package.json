@@ -1,7 +1,6 @@
 {
   "name": "bag-of-rocks",
   "version": "0.5.0",
-  "private": true,
   "description": "Synthetic UX walkthrough skill with frozen tester packets and an annotated evidence filmstrip",
   "license": "MIT",
   "files": [
@@ -25,5 +24,9 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/mzebley/bag-of-rocks.git"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   }
 }

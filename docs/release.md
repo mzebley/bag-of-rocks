@@ -4,10 +4,10 @@
 
 The release preparation checked the GitHub identity and repository availability before creation. It used the reviewed project copy, leaving the installed skill directory unchanged.
 
-## Optional npm distribution — not published
+## npm distribution
 
-The package.json remains deliberately `private: true`. Its MIT license and GitHub repository are set, but no npm publishing identity or owned package name/scope is verified. The prior npm whoami check returned E401. GitHub identity does not establish npm ownership.
+Version 0.5.0 is prepared for public distribution as `bag-of-rocks` through the author's `mzebley` npm account. The package uses an explicit file allowlist and contains the skill, helpers, templates, documentation, examples, and offline tests. It has no runtime dependencies, executable bin, or install lifecycle scripts.
 
-The package contains static skill files, documentation and tests under an explicit file allowlist. No executable bin, runtime dependencies or install lifecycle scripts are present. Use npm only if colleagues need a registry artifact. Verify identity, choose an available name or owned scope, settle the registry version, inspect and test the tarball, then remove private only when publication is authorized and ready. npm installation alone does not register the skill with an agent.
+Download the files with `npm pack bag-of-rocks@0.5.0`, extract the archive, and copy the skill files into your agent's configured skills directory as described in the README. npm installation alone does not register the skill with an agent. Python 3 runs the helpers; model and browser usage remain separate.
 
-[Public npm packages can be published with a free account](https://docs.npmjs.com/about-public-packages/). [Scoped public publication](https://docs.npmjs.com/creating-and-publishing-scoped-public-packages/) requires explicit public access and account authentication. No purchases or npm publication were made. Runtime model usage may still cost money under the user's provider plan.
+Before each publication, inspect the tarball, run its offline tests, and confirm the authenticated npm account. Publish the inspected tarball to the public registry after completing npm's authentication prompts.

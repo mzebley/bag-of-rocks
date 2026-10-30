@@ -1,0 +1,156 @@
+{
+  "run": {
+    "id": "illustrative-address-change",
+    "date": "2026-10-29",
+    "goal": "Change my mailing address to 12 Elm St.",
+    "start": "https://staging.example.test/",
+    "preset": "full-bag",
+    "traits": [
+      "VPF",
+      "HTS",
+      "FC",
+      "LIT",
+      "NR",
+      "LP"
+    ],
+    "phrasing": "fixed",
+    "mutations": "none",
+    "conditions": [
+      "Authored documentation example; no tester run"
+    ],
+    "perception": "illustrative",
+    "mode": "fast",
+    "skill_version": "0.5.0"
+  },
+  "outcome": {
+    "believed": "Ready to save the new address.",
+    "supported": "Editor reached; save untested.",
+    "gap": "The tester stops before Save because mutations are not allowed."
+  },
+  "summary": [
+    {
+      "finding": "F1",
+      "headline": "The prominent profile card draws attention away from the address link.",
+      "step": "C1"
+    }
+  ],
+  "intended": [
+    {
+      "id": "I1",
+      "screen": "Account",
+      "cue": "Edit beside Mailing address",
+      "action": "Open the address editor"
+    },
+    {
+      "id": "I2",
+      "screen": "Address editor",
+      "cue": "Street address field",
+      "action": "Enter 12 Elm St.; stop before Save"
+    }
+  ],
+  "steps": [
+    {
+      "id": "C1",
+      "kind": "checkpoint",
+      "screenshot": "screens/account.png",
+      "result_screenshot": "screens/profile.png",
+      "cue": "Large blue Update profile card",
+      "expectation": "This is where I change my information.",
+      "action": "Clicked Update profile",
+      "result": "A photo and bio editor opened.",
+      "updated": "This is the wrong place. Go back to Account.",
+      "traits": [
+        "VPF"
+      ],
+      "clicks": [
+        {
+          "x": 50,
+          "y": 38,
+          "n": 1,
+          "approx": false
+        }
+      ],
+      "ignored": [
+        {
+          "x": 65,
+          "y": 73,
+          "w": 25,
+          "h": 10,
+          "label": "Edit"
+        }
+      ],
+      "divergence": {
+        "from": "I1",
+        "kind": "recovered",
+        "note": "Returned to Account at C2."
+      }
+    },
+    {
+      "id": "C2",
+      "kind": "checkpoint",
+      "screenshot": "screens/account.png",
+      "result_screenshot": "screens/address.png",
+      "cue": "Edit beside Mailing address",
+      "expectation": "This should open my address.",
+      "action": "Returned to Account, then clicked Edit",
+      "result": "The mailing address editor opened.",
+      "updated": "Replace the street address.",
+      "traits": [
+        "ordinary"
+      ],
+      "clicks": [
+        {
+          "x": 87,
+          "y": 79,
+          "n": 1,
+          "approx": false
+        }
+      ]
+    },
+    {
+      "id": "C3",
+      "kind": "checkpoint",
+      "screenshot": "screens/ready.png",
+      "cue": "Street address field and Save address button",
+      "expectation": "Save address would apply this change.",
+      "action": "Entered 12 Elm St.; did not click Save address",
+      "entered_text": "12 Elm St.",
+      "result": "New text is visible in the editor; no save was attempted.",
+      "updated": "Stop at the mutation boundary.",
+      "traits": [
+        "ordinary"
+      ],
+      "untested": true
+    }
+  ],
+  "findings": [
+    {
+      "id": "F1",
+      "source": "reviewer-only",
+      "category": "confusion",
+      "title": "The profile card competes with the address link",
+      "steps": [
+        "C1",
+        "C2"
+      ],
+      "traits": [
+        "VPF"
+      ],
+      "component": "Account navigation",
+      "component_basis": "visible in fictional mockup",
+      "expected": "Find the mailing address editor from Account.",
+      "observed": "The authored sequence takes a detour through the profile editor.",
+      "cost": "One wrong destination and a return to Account.",
+      "fix": "Try a clearer label, such as Edit photo and bio, for the profile card.",
+      "fix_signal": "A fresh tester opens the address editor without the profile detour.",
+      "regression_risk": "Profile editing becomes harder to find.",
+      "ablation": "Rerun without Visual Priority Follower to explore whether visual prominence drives the detour."
+    }
+  ],
+  "limits": [
+    "Authored illustration, not an executed tester run. Screens are fictional mockups captured in a browser.",
+    "Expectations, clicks, ignored regions, and findings are illustrative annotations, not observed behavior.",
+    "No account was changed. Save, validation, persistence, and confirmation are untested."
+  ],
+  "errata": []
+}

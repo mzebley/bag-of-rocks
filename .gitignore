@@ -7,3 +7,4 @@ node_modules/
 .env
 .env.*
 content-review/
+docs/sample-timeline/filmstrip.html

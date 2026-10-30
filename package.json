@@ -12,6 +12,10 @@
     "assets/filmstrip.html",
     "examples/*.json",
     "docs/*.md",
+    "docs/images/*.png",
+    "docs/sample-timeline/run.json",
+    "docs/sample-timeline/screens.html",
+    "docs/sample-timeline/screens/*.png",
     "docs/installed-source-sha256.json",
     "tests/*.py"
   ],

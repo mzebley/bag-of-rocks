@@ -20,6 +20,36 @@ Use the findings as hypotheses to investigate. They don't establish how real peo
 
 The agent performs the walkthrough. These Python scripts do not launch or control a browser, create a sandbox, or enforce permissions.
 
+## Walk through a sample timeline
+
+This example follows a mailing-address change: a wrong turn, a recovery, and a stop before saving. **The scenario and annotations are authored illustrations, not a completed tester run.** The screenshots show fictional account screens inside the actual filmstrip renderer.
+
+![Sample report showing the goal, outcome, and intended path](docs/images/timeline-overview.png)
+
+Start with the outcome: what the tester believed, what the evidence supports, and the gap between them. Here, reaching the editor doesn't establish that the address was saved. The intended path appears below for the reviewer; in a real run, the tester never receives it.
+
+| Checkpoint | What happens | What to look for |
+| --- | --- | --- |
+| C1 — Wrong turn | The tester chooses **Update profile** and reaches a photo and bio editor. | The prominent card wins attention over the smaller address link. |
+| C2 — Recovery | It returns to Account and chooses **Edit** beside Mailing address. | The detour is marked as recovered, with a reference to intended step I1. |
+| C3 — Stop before Save | It enters `12 Elm St.` and stops at **Save address**. | With mutations disabled, saving is recorded as intent only. |
+
+![Checkpoint C1 with before and after screens, a click marker, an ignored region, and the tester's expectation](docs/images/timeline-detour.png)
+
+Read each checkpoint from the screen to the expectation, action, result, and next decision. Numbered circles mark clicks; hatched regions identify cues recorded as not read. `VPF` means Visual Priority Follower, the trait illustrated by this detour. These annotations describe the supplied trace; they aren't eye-tracking measurements.
+
+![Finding F1 linking the detour to a proposed label change and a follow-up check](docs/images/timeline-finding.png)
+
+The finding links back to C1 and C2, proposes **Edit photo and bio** as a clearer label, and names a check for the next run: can a fresh tester reach the address editor without the detour? It also flags what that change might break—making profile editing harder to find.
+
+To explore the full sample locally, generate it from the included [run data](docs/sample-timeline/run.json):
+
+```sh
+python3 scripts/trace_to_run.py docs/sample-timeline --filmstrip
+```
+
+Open `docs/sample-timeline/filmstrip.html` in a browser. The summary and finding links jump to their checkpoints. The included PNGs come from [fictional screen mockups](docs/sample-timeline/screens.html); no account or private product data is used.
+
 ## Requirements
 
 Use an agent with screenshot-based browser control and filesystem access. Give the tester a fresh context when possible; if it already knows the intended path or prior conversation, label the run as an informed pass.

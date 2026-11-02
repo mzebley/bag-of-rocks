@@ -4,7 +4,8 @@
 
 - `npm pack --dry-run` lists 47 files: the skill, helpers, references, templates, docs, examples, tests, and `fixtures/`. No bytecode, run evidence, or `.bag-of-rocks/` folders.
 - All 20 offline unittest checks pass from an unpacked 0.6.0 tarball, including strict packet builds for all seven fixtures with no leaked fixture names.
-- Not yet covered: installation from the public registry (recorded after publication), installation through the skills CLI, and blind runs on the six fixtures other than `hint-only-format`.
+- After publication: the registry's `bag-of-rocks@0.6.0` integrity and SHA-256 match the inspected local tarball. Installed from the public registry into an empty temporary project with a fresh npm cache, using `--ignore-scripts`; the installed package reports 0.6.0, includes the fixtures, and all 20 bundled tests pass. The registry lists 0.6.0 as `latest`.
+- Not covered: installation through the skills CLI, and blind runs on the six fixtures other than `hint-only-format`.
 
 ## 0.6.0: leak test on the hint-only-format fixture (2026-10-31 to 2026-11-01)
 

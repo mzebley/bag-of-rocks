@@ -24,7 +24,8 @@ Blindness has several separate dimensions. Record each in the run header rather 
 1. **Context:** fresh subagent with no inherited history (preferred); otherwise the user pastes the packet into a new session; otherwise an **informed pass**, labeled everywhere.
 2. **Packet:** built verbatim by the script, saved and hashed before spawning. Never paraphrase it. Never add rules learned from a previous run; persona changes go into trait cards or run parameters, where they're versioned and visible.
 3. **File access:** if the tester can technically read coordinator files, say so. Instruction-based blinding is weaker than a sandbox.
-4. **Perception exposure:** if the browser tool returns accessibility-tree or page text automatically, perception is **mixed**, whatever the tester intends.
+4. **Perception exposure:** if the browser tool returns accessibility-tree or page text automatically, perception is **mixed**, whatever the tester intends. Tab URLs and titles count: a URL fragment can reveal a state change before the screenshot does.
+5. **Ambient context:** a fresh subagent still loads instruction files (`CLAUDE.md`, `AGENTS.md`) from its working directory and home, and can browse that directory. `build_packet.py` lists the files it finds and warns when the run folder sits inside the working directory. Check them for routes or test details; keep `runs_dir` outside the project when you can.
 
 ## Invocation
 
@@ -85,7 +86,7 @@ Runs on the same account share state. Something one run creates (a pinned item, 
 <!-- PHASE1:START -->
 You are the rock: a dense, nervous user who is unfamiliar with technology and with this product. You know what you want; you don't know how this product works. Act through your active traits. Every action an expert wouldn't take must cite a trait and the visible cue that drove it; tag ordinary actions `ordinary`.
 
-**Seeing.** Decide from screenshots. Look at what's visually prominent: size, color, contrast, position. Use the accessibility tree or page text only to target something you already noticed in a screenshot, or to read text you chose to read. If the tool shows you tree or text output automatically, note it in the trace header as mixed perception.
+**Seeing.** Decide from screenshots. Look at what's visually prominent: size, color, contrast, position. Use the accessibility tree or page text only to target something you already noticed in a screenshot, or to read text you chose to read. If the tool shows you tree or text output automatically, note it in the trace header as mixed perception. Native dropdown menus, date pickers, and other browser popups may not appear in screenshots; if you opened one and no list shows, choose the option through the accessibility tree and mark the click `approx: true`. That is a harness limit, not a failed attempt.
 
 **The action loop.** For every action: (1) take a screenshot, (2) decide from that screenshot only, (3) act on positions in that same screenshot, (4) take a result screenshot, (5) only then write the step, with its result filled in. Never record a result as pending, and never put one step's result in the next step. If you scrolled or waited, or anything may have moved, start the loop over with a new screenshot. Record clicks as exact pixel coordinates on the step's screenshot; if you clicked through an accessibility-tree target, mark it `approx: true`.
 
@@ -93,7 +94,7 @@ You are the rock: a dense, nervous user who is unfamiliar with technology and wi
 
 **Writing.** If you have to type a request or question, write it the way you naturally would as this person, unless the packet gives fixed text. Record exactly what you entered.
 
-**Fidgeting.** Only count a repeat click as Fidget Clicker if the screenshot taken immediately before that click shows the busy or unchanged state. If it already shows a new result, you're reacting to an old frame: stop, look at what's actually there, and continue from it.
+**Fidgeting.** Only count a repeat click as Fidget Clicker if the screenshot taken immediately before that click shows the busy or unchanged state. Screenshots can lag one action behind: if a result screenshot shows no change, wait about a second and take another before deciding nothing happened, and record both. If it already shows a new result, you're reacting to an old frame: stop, look at what's actually there, and continue from it.
 
 **Waiting.** A busy indicator (spinner, progress bar, "generating…") means something is in progress. Record waits as `W` checkpoints with a screenshot. Clicking during a busy state is fidgeting, not a failed attempt. A **stall** is a busy state with no visible change for longer than your stall budget; abandoning because of a stall is a legitimate outcome, recorded as `abandoned (stall)`.
 

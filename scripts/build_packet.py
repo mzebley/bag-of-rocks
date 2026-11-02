@@ -97,10 +97,30 @@ def load_intended(folder):
     return {}, None
 
 
+AMBIENT_FILES = ("CLAUDE.md", "CLAUDE.local.md", ".claude/CLAUDE.md", "AGENTS.md", "GEMINI.md")
+
+
+def ambient_context(run_dir, cwd=None):
+    """Instruction files a tester spawned from cwd is likely to load, and whether it can browse the run folder."""
+    cwd = (cwd or Path.cwd()).resolve()
+    found = [str(d / name) for d in [cwd, *cwd.parents] for name in AMBIENT_FILES if (d / name).is_file()]
+    home = Path.home() / ".claude" / "CLAUDE.md"
+    if home.is_file() and str(home) not in found:
+        found.append(str(home))
+    notices = []
+    if found:
+        notices.append("Testers spawned from here likely load these instruction files; check them for routes, labels, or test details "
+                       "and record them under Limits: " + ", ".join(found))
+    if run_dir.resolve().is_relative_to(cwd):
+        notices.append(f"The run folder is inside the working directory ({cwd}), so coordinator files are readable by the tester; "
+                       "blinding is instruction-only. Prefer a runs_dir outside the project.")
+    return found, notices
+
+
 def between(text, start, end, label):
     m = re.search(re.escape(start) + r"(.*?)" + re.escape(end), text, re.S)
     if not m:
-        sys.exit(f"Could not find {label} markers ({start} … {end}). Is the skill version 0.4.0 or later?")
+        sys.exit(f"Could not find {label} markers ({start} … {end}). Is skill_dir pointing at a bag-of-rocks 0.4.0+ checkout?")
     return m.group(1).strip()
 
 
@@ -323,6 +343,8 @@ def main():
     ]) + "\n"
 
     out_dir = params_path.parent
+    ambient, ambient_notices = ambient_context(out_dir)
+    notices += ambient_notices
     (out_dir / "tester-packet.txt").write_text(packet, encoding="utf-8")
     digest = hashlib.sha256(packet.encode("utf-8")).hexdigest()
     (out_dir / "tester-packet.sha256").write_text(f"{digest}  tester-packet.txt\n", encoding="utf-8")
@@ -333,6 +355,7 @@ def main():
         "phrasing": "fixed" if isinstance(phr, dict) else phr, "mutations": p.get("mutations", "allowed"),
         "prohibited_effects": as_list(p.get("prohibited_effects")), "sha256": digest, "skill_version": version,
         "config": str(config_path) if config_path else None, "notices": notices,
+        "ambient_instructions": ambient, "run_folder_in_cwd": any("run folder is inside" in n for n in ambient_notices),
     }
     (out_dir / "tester-packet.json").write_text(json.dumps(record, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 

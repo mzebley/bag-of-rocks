@@ -27,6 +27,11 @@ Packet text changes (trace schema gains `click_space`), so packets built from th
 ### Persona
 - **Phase 1 "Reading" no longer restates Helper-Text Skipper.** Previous: "Read headings, button and link labels, field labels, error messages, and the answer or result you came for. Don't read instructions, descriptions, hints, or explanatory paragraphs unless your traits say you would." Now: "Read what this person would naturally read on the way to their goal; your traits may narrow that." Evidence: in run-2026-10-31-d (hint-only-format fixture, HTS removed), the tester still skipped a legible date hint and tagged it `ordinary`; removing the card also removed its read-after-two-failures limit. HTS ablations were impossible under the old wording. After the change, both HTS-off testers (run-2026-11-01-a, -b) read the hint and entered `2026-11-20` on the first try; with HTS on (run-2026-10-31-a to -c), 0 of 3 did. Descriptive only: 5 runs on one fixture.
 
+- **Helper-Text Skipper limit:** previous "read the helper text for a field or step after it has failed twice." Now: read it after one failure whose visible error points at that field or step. Evidence: in run-2026-10-31-a to -c, Low Patience abandoned at the second failure, the same moment the old limit unlocked, so HTS never recovered in full-bag.
+- **Phase 1:** native dropdowns and pickers that don't render in screenshots are chosen through the accessibility tree (`approx: true`) and don't count as failed attempts. Evidence: all six leak-test runs; run-2026-11-01-a abandoned on the dropdown alone.
+- **Phase 1 settle check:** an unchanged result screenshot gets a second screenshot about a second later before counting as no change. Evidence: stale frames in 4 of 6 leak-test runs, including a false fidget in run-2026-11-01-b.
+- **Ambient context** is a fifth blindness dimension. `build_packet.py` lists instruction files a tester would load and warns when the run folder is inside the working directory; `trace_to_run.py` carries both into Limits.
+
 ### Calibration fixtures
 - Added the rock garden in `fixtures/`: seven planted-blind-spot pages, intended paths, and `new_run.py`. See `fixtures/README.md`.
 - `decoy-primary` and `clean-control` goals say "Reserve" instead of "Book the Oak Room", which matched the form's submit label and was flagged by the answer-key check.

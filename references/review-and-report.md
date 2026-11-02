@@ -183,7 +183,7 @@ Each: held | failed | not exercised.
 Trait or phrasing changes worth running next, and what each would show.
 
 ## Limits
-- Blindness: context, packet hash, file access, perception exposure.
+- Blindness: context, packet hash, file access, perception exposure, ambient instruction files.
 - Inherited state from earlier runs, or the reset performed.
 - Trace problems reported by trace_to_run.py.
 - Conditions applied or not applied; untested commits; state mismatches; cleanup.

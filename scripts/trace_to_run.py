@@ -30,7 +30,7 @@ sys.dont_write_bytecode = True  # keep installed skill folders free of __pycache
 from build_packet import load_intended, norm_trait, read_data, resolve_traits  # noqa: E402
 
 STOP_REASONS = {"believed complete", "blocked", "abandoned (patience)", "abandoned (stall)", "budget", "permission stop"}
-AUTO_LIMITS = ("Perception:", "Trace problem:", "Packet:", "Tester files:")
+AUTO_LIMITS = ("Perception:", "Trace problem:", "Packet:", "Tester files:", "Ambient:")
 
 
 def sniff(path):
@@ -358,6 +358,8 @@ def main():
         "steps": steps_out, "findings": [], "errata": [],
         "limits": ([f"Perception: {header.get('perception')} ({header.get('perception_note', '')})"] if header.get("perception") else [])
                   + ([packet_note] if packet_note else []) + [freeze_note]
+                  + ([f"Ambient: instruction files likely loaded by the tester: {', '.join(built['ambient_instructions'])}"] if built.get("ambient_instructions") else [])
+                  + (["Ambient: run folder was inside the tester's working directory; coordinator files were readable (instruction-only blinding)"] if built.get("run_folder_in_cwd") else [])
                   + [f"Trace problem: {p}" for p in problems],
         "end": end,
     }

@@ -22,7 +22,7 @@ presets: { }                    # see traits.md
 design_system:
   inventory: ../design-system/components.json   # or a markdown list of components
 rocks_dir: .bag-of-rocks/rocks
-runs_dir: .bag-of-rocks/runs
+runs_dir: ~/.bag-of-rocks/runs/example   # outside the project, so testers can't browse coordinator files
 ```
 
 `build_packet.py` finds this file by searching upward from the params file (or uses a `config:` path in the params). It applies `default_preset` and `presets`, adds a matching environment's `prohibited` list to `prohibited_effects`, and forces `mutations: none` when that environment says so. A start URL that matches no environment and doesn't look like a dev host (localhost, private IPs, `.test`/`.local`, or labels such as `staging`, `dev`, `qa`, `preview`) is treated as production. Declare the host here to allow mutations on it.
@@ -69,7 +69,7 @@ The coordinator writes `run-params.yaml` in the run folder, then builds the pack
 
 ```yaml
 run_id: run-2026-10-27-c                     # neutral; the tester sees it
-skill_dir: ~/.codex/skills/bag-of-rocks      # where SKILL.md lives
+skill_dir: ~/.claude/skills/bag-of-rocks     # where SKILL.md lives; omit to use the script's own checkout
 goal: Determine whether Example Organization 1, 2, or 3 had staffing-related issues.
 start_url: http://localhost:4200/
 account: local-tester                        # alias only, never credentials

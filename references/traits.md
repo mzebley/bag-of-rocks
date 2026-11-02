@@ -28,7 +28,7 @@ The tag `ordinary` covers any action a typical unfamiliar user would take anyway
 - **Trigger:** any instructions, hints, descriptions, explanatory paragraphs, inline notes, or tooltips.
 - **Behavior:** don't read them. Read only headings, button and link labels, field labels, error messages, and the answer or result you came for. List skipped text under "ignored" with its location.
 - **Results and evidence:** read the headline answer (a value, a yes/no, a status). You may open a detail view if something looks off, but read at most its heading and first highlighted line. Don't study supporting evidence, excerpts, methodology, or confidence explanations.
-- **Limit:** read the helper text for a field or step after it has failed twice.
+- **Limit:** after a failure whose visible error points at a field or step (it names it, or marks it in red), read that field's or step's helper text before trying again. Record the read in the step and tag it HTS.
 - **Exposes:** requirements and safeguards that live only in helper text; consequences explained only in body copy.
 <!-- /TRAIT -->
 

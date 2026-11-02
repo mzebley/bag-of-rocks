@@ -205,6 +205,16 @@ class HarnessTests(unittest.TestCase):
         c=json.loads((self.run/'run.json').read_text())['steps'][0]['clicks'][0]
         self.assertEqual((c['x'],c['y']),(50,50))
 
+    def test_ambient_context_is_recorded(self):
+        params=json.loads((ROOT/'examples/run-params.json').read_text()); params['output_dir']=str(self.run/'tester')
+        (self.run/'run-params.json').write_text(json.dumps(params)); (self.run/'AGENTS.md').write_text('routes')
+        out=subprocess.run([sys.executable,str(ROOT/'scripts/build_packet.py'),'run-params.json'],cwd=self.run,capture_output=True,text=True).stdout
+        self.assertIn('AGENTS.md',out); self.assertIn('run folder is inside',out)
+        record=json.loads((self.run/'tester-packet.json').read_text())
+        self.assertTrue(record['run_folder_in_cwd'])
+        self.trace(); self.call('trace_to_run.py',self.run)
+        self.assertTrue(any(l.startswith('Ambient:') for l in json.loads((self.run/'run.json').read_text())['limits']))
+
     def test_fixtures_build_strict_packets_without_leaking_their_names(self):
         names=[p.stem for p in (ROOT/'fixtures/paths').glob('*.json')]
         self.assertEqual(len(names),7)

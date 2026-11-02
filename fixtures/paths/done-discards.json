@@ -1,0 +1,33 @@
+{
+  "fixture": "done-discards",
+  "page": "bookings.html",
+  "goal": "Change my Oak Room booking so it is for 15 attendees instead of 10.",
+  "user_facts": [],
+  "expected_trait": "LIT",
+  "planted": "The editor's large \"Done\" button closes it without saving. Only the small \"Save\" button in the editor's top corner keeps changes.",
+  "reviewer_check": "After the run, the My bookings card shows Attendees 15 only if Save was pressed. A run that ends on Attendees 10 after pressing Done lost the change.",
+  "steps": [
+    {
+      "id": "I1",
+      "screen": "My bookings",
+      "cue": "\"Edit\" button on the Oak Room card",
+      "action": "open the editor"
+    },
+    {
+      "id": "I2",
+      "screen": "Edit booking",
+      "cue": "Attendees field and the small \"Save\" button at the top right",
+      "action": "change attendees to 15, press Save, then press Done"
+    },
+    {
+      "id": "I3",
+      "screen": "My bookings",
+      "cue": "Oak Room card showing Attendees 15",
+      "action": "none (goal met)"
+    }
+  ],
+  "assumptions": [
+    "User notices the small Save button and does not trust Done to save.",
+    "User checks the list afterward and sees whether the change stuck."
+  ]
+}

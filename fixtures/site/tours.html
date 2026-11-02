@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Visit Cedar Hall</title><link rel="stylesheet" href="style.css"><script src="app.js"></script></head>
+<body>
+<header><div class="bar"><a class="brand" href="#home">Cedar Hall</a><nav><a href="#home">Visit</a><a href="#requests">My requests</a></nav></div></header>
+<main>
+  <section data-view="home">
+    <div class="hero">Cedar Hall, 410 Cedar Avenue</div>
+    <h1>Visit Cedar Hall</h1>
+    <p>Thinking about holding an event or joining a class? A staff member can walk you through the building, the meeting rooms, and the kitchen.</p>
+    <a class="btn primary big" href="#request">Request a tour</a>
+  </section>
+
+  <section data-view="request" hidden>
+    <h1>Request a tour</h1>
+    <form id="tour-form" class="card">
+      <label for="t-name">Your name</label>
+      <input id="t-name" required autocomplete="off">
+      <label for="t-email">Email</label>
+      <input id="t-email" type="email" required autocomplete="off">
+      <label for="t-day">Preferred day</label>
+      <select id="t-day"><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option></select>
+      <label for="t-time">Preferred time</label>
+      <select id="t-time"><option>Morning</option><option>Afternoon</option></select>
+      <div class="actions"><button class="btn primary" type="submit">Send request</button></div>
+    </form>
+  </section>
+
+  <section data-view="sent" hidden>
+    <div class="alert ok">Thanks, your tour request is in. We will email you within two business days.</div>
+    <h2>Your requests</h2>
+    <div id="sent-list"></div>
+    <p><a href="#home">Back to Visit Cedar Hall</a></p>
+  </section>
+
+  <section data-view="requests" hidden>
+    <h1>My requests</h1>
+    <div id="all-list"></div>
+  </section>
+</main>
+<script>
+  let pending = null;
+  document.getElementById('tour-form').addEventListener('submit', e => {
+    e.preventDefault();
+    const requests = store.get('tour-requests', []);
+    requests.push({
+      n: requests.length + 1,
+      name: document.getElementById('t-name').value,
+      day: document.getElementById('t-day').value,
+      time: document.getElementById('t-time').value,
+      at: new Date().toLocaleTimeString(),
+    });
+    store.set('tour-requests', requests);
+    console.info('Tour request received:', requests.length, 'total');
+    if (!pending) pending = setTimeout(() => { pending = null; go('sent'); }, 4000);
+  });
+  function render(id) {
+    const requests = store.get('tour-requests', []);
+    document.getElementById(id).innerHTML = requests.length
+      ? requests.map(r => `<div class="card">Request #${r.n}: ${r.day} ${r.time.toLowerCase()} tour<br><span class="muted">Received ${r.at}</span></div>`).join('')
+      : '<p class="muted">No requests yet.</p>';
+  }
+  onView('sent', () => render('sent-list'));
+  onView('requests', () => render('all-list'));
+</script>
+</body>
+</html>

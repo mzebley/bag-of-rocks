@@ -1,0 +1,46 @@
+{
+  "fixture": "clean-control",
+  "page": "book.html",
+  "goal": "Reserve the Oak Room for the morning of 3 December 2026 for 10 people, then change the booking to 15 people.",
+  "user_facts": [
+    "Your name is Jordan Lee"
+  ],
+  "expected_trait": null,
+  "planted": "None. The same booking and edit flow with each blind spot fixed: the booking action is the primary button, the date accepts several formats and the label shows an example, Book shows a loading state and disables, the editor's only primary action is Save changes, nothing is labeled irreversible, and every screen has a way back.",
+  "reviewer_check": "Restraint check: the run should complete without a reported defect. localStorage.getItem('cedar-book-submissions') should hold one entry.",
+  "steps": [
+    {
+      "id": "I1",
+      "screen": "The Oak Room",
+      "cue": "\"Check availability and book\" primary button",
+      "action": "open the booking form"
+    },
+    {
+      "id": "I2",
+      "screen": "Book the Oak Room",
+      "cue": "Date field with example in the label, time, attendees, name, and the \"Book the Oak Room\" button",
+      "action": "enter 3 December 2026, Morning, 10 attendees, name, press Book the Oak Room and wait for Booking..."
+    },
+    {
+      "id": "I3",
+      "screen": "Booking confirmed",
+      "cue": "\"Edit booking\" button under the confirmation",
+      "action": "open the editor"
+    },
+    {
+      "id": "I4",
+      "screen": "Edit booking",
+      "cue": "Attendees field and \"Save changes\" button",
+      "action": "change attendees to 15 and press Save changes"
+    },
+    {
+      "id": "I5",
+      "screen": "My bookings",
+      "cue": "\"Changes saved\" banner with Attendees 15",
+      "action": "none (goal met)"
+    }
+  ],
+  "assumptions": [
+    "Every assumption from the other fixtures holds here because each one is designed in, not assumed."
+  ]
+}

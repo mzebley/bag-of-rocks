@@ -17,7 +17,13 @@
     "docs/sample-timeline/screens.html",
     "docs/sample-timeline/screens/*.png",
     "docs/installed-source-sha256.json",
-    "tests/*.py"
+    "tests/*.py",
+    "fixtures/README.md",
+    "fixtures/new_run.py",
+    "fixtures/paths/*.json",
+    "fixtures/site/*.html",
+    "fixtures/site/*.css",
+    "fixtures/site/*.js"
   ],
   "keywords": [
     "agent-skill",

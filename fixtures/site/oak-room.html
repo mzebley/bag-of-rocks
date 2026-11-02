@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>The Oak Room - Cedar Hall</title><link rel="stylesheet" href="style.css"><script src="app.js"></script></head>
+<body>
+<header><div class="bar"><a class="brand" href="#room">Cedar Hall</a><nav><a href="#room">Oak Room</a></nav></div></header>
+<main>
+  <section data-view="room">
+    <div class="hero">The Oak Room</div>
+    <h1>The Oak Room</h1>
+    <p><a class="btn primary big" href="#tour">Take the virtual tour</a></p>
+    <p>Our most popular meeting space. Seats up to 20 around a long oak table, with a ceiling projector, a whiteboard wall, and windows onto the courtyard. <a href="#book">Check availability and book</a> for weekday and weekend slots.</p>
+    <p class="muted">Free for registered residents. Bookings open 60 days ahead.</p>
+  </section>
+
+  <section data-view="tour" hidden>
+    <p><a href="#room">Back to the Oak Room</a></p>
+    <h1>Virtual tour</h1>
+    <div class="hero" id="tour-photo">Photo 1 of 4: The long table</div>
+    <button class="btn" id="tour-next" type="button">Next photo</button>
+  </section>
+
+  <section data-view="book" hidden>
+    <h1>Book the Oak Room</h1>
+    <form id="b-form" class="card">
+      <label for="b-date">Date</label>
+      <select id="b-date"><option>Tuesday 1 December 2026</option><option>Thursday 3 December 2026</option><option>Friday 4 December 2026</option><option>Tuesday 8 December 2026</option></select>
+      <label for="b-time">Time</label>
+      <select id="b-time"><option>Morning</option><option>Afternoon</option><option>Evening</option></select>
+      <label for="b-name">Your name</label>
+      <input id="b-name" required autocomplete="off">
+      <div class="actions"><button class="btn primary" type="submit">Book the Oak Room</button><a href="#room">Cancel</a></div>
+    </form>
+  </section>
+
+  <section data-view="booked" hidden>
+    <div class="alert ok">Your Oak Room booking is confirmed.</div>
+    <div class="card"><dl id="b-summary"></dl></div>
+    <p><a href="#room">Back to the Oak Room</a></p>
+  </section>
+</main>
+<script>
+  const photos = ['The long table', 'Projector wall', 'Courtyard windows', 'Entrance hall'];
+  let photo = 0;
+  document.getElementById('tour-next').addEventListener('click', () => {
+    photo = (photo + 1) % photos.length;
+    document.getElementById('tour-photo').textContent = `Photo ${photo + 1} of 4: ${photos[photo]}`;
+  });
+  document.getElementById('b-form').addEventListener('submit', e => {
+    e.preventDefault();
+    store.set('oak-booking', { date: document.getElementById('b-date').value, time: document.getElementById('b-time').value, name: document.getElementById('b-name').value });
+    go('booked');
+  });
+  onView('booked', () => {
+    const b = store.get('oak-booking', null);
+    document.getElementById('b-summary').innerHTML = b
+      ? `<dt>Date</dt><dd>${b.date}</dd><dt>Time</dt><dd>${b.time}</dd><dt>Name</dt><dd>${b.name}</dd>`
+      : '<dt>Status</dt><dd>No booking yet</dd>';
+  });
+</script>
+</body>
+</html>

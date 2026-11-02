@@ -1,0 +1,36 @@
+{
+  "fixture": "silent-submit",
+  "page": "tours.html",
+  "goal": "Ask Cedar Hall for a tour of the building on a weekday morning.",
+  "user_facts": [
+    "Your name is Jordan Lee",
+    "Your email is jordan.lee@example.com"
+  ],
+  "expected_trait": "FC",
+  "planted": "Send request takes about 4 seconds with no loading state, and the button stays enabled. Every press records another request.",
+  "reviewer_check": "Count the entries under 'Your requests' on the confirmation screen, or run localStorage.getItem('cedar-tour-requests') in the page console. More than one entry is a duplicate submission.",
+  "steps": [
+    {
+      "id": "I1",
+      "screen": "Visit Cedar Hall",
+      "cue": "\"Request a tour\" primary button",
+      "action": "open the tour form"
+    },
+    {
+      "id": "I2",
+      "screen": "Request a tour",
+      "cue": "Name, email, day, time fields and the \"Send request\" button",
+      "action": "fill in the form, press Send request once, and wait"
+    },
+    {
+      "id": "I3",
+      "screen": "Request sent",
+      "cue": "\"Thanks, your tour request is in\" banner with one request listed",
+      "action": "none (goal met)"
+    }
+  ],
+  "assumptions": [
+    "User waits about 4 seconds without any sign that the request is being sent.",
+    "User does not press Send request again while nothing appears to happen."
+  ]
+}

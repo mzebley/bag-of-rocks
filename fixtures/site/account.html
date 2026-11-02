@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Your details - Cedar Hall</title><link rel="stylesheet" href="style.css"><script src="app.js"></script></head>
+<body>
+<header><div class="bar"><a class="brand" href="#profile">Cedar Hall</a><nav><a href="#profile">Your details</a></nav></div></header>
+<main>
+  <section data-view="profile">
+    <div id="p-status" class="alert ok" hidden>Your details were updated.</div>
+    <h1>Your details</h1>
+    <div class="card">
+      <dl id="p-summary"></dl>
+      <div class="actions"><a class="btn" href="#edit">Edit details</a></div>
+    </div>
+  </section>
+
+  <section data-view="edit" hidden>
+    <h1>Edit your details</h1>
+    <form id="d-form" class="card">
+      <label for="d-name">Name</label>
+      <input id="d-name" required autocomplete="off">
+      <label for="d-email">Email</label>
+      <input id="d-email" type="email" required autocomplete="off">
+      <label for="d-phone">Phone</label>
+      <input id="d-phone" autocomplete="off">
+      <div class="alert warn" style="margin-top:22px">Submit final record. This cannot be undone.</div>
+      <div class="actions"><button class="btn primary" type="submit">Submit final record</button><a href="#profile">Cancel</a></div>
+    </form>
+  </section>
+</main>
+<script>
+  const initial = { name: 'Jordan Lee', email: 'jordan.lee@example.com', phone: '555-0199' };
+  let justSaved = false;
+  onView('profile', () => {
+    const d = store.get('details', initial);
+    document.getElementById('p-summary').innerHTML = `<dt>Name</dt><dd>${d.name}</dd><dt>Email</dt><dd>${d.email}</dd><dt>Phone</dt><dd>${d.phone}</dd>`;
+    document.getElementById('p-status').hidden = !justSaved;
+    justSaved = false;
+  });
+  onView('edit', () => {
+    const d = store.get('details', initial);
+    document.getElementById('d-name').value = d.name;
+    document.getElementById('d-email').value = d.email;
+    document.getElementById('d-phone').value = d.phone;
+  });
+  document.getElementById('d-form').addEventListener('submit', e => {
+    e.preventDefault();
+    store.set('details', { name: document.getElementById('d-name').value, email: document.getElementById('d-email').value, phone: document.getElementById('d-phone').value });
+    justSaved = true;
+    go('profile');
+  });
+</script>
+</body>
+</html>

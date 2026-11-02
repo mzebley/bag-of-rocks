@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>The Oak Room - Cedar Hall</title><link rel="stylesheet" href="style.css"><script src="app.js"></script></head>
+<body>
+<header><div class="bar"><a class="brand" href="#room">Cedar Hall</a><nav><a href="#room">Oak Room</a><a href="#bookings">My bookings</a></nav></div></header>
+<main>
+  <section data-view="room">
+    <div class="hero">The Oak Room</div>
+    <h1>The Oak Room</h1>
+    <p><a class="btn primary big" href="#book">Check availability and book</a></p>
+    <p>Our most popular meeting space. Seats up to 20 around a long oak table, with a ceiling projector, a whiteboard wall, and windows onto the courtyard. Want a look first? <a href="#tour">Take the virtual tour</a>.</p>
+    <p class="muted">Free for registered residents. Bookings open 60 days ahead.</p>
+  </section>
+
+  <section data-view="tour" hidden>
+    <p><a href="#room">Back to the Oak Room</a></p>
+    <h1>Virtual tour</h1>
+    <div class="hero" id="tour-photo">Photo 1 of 4: The long table</div>
+    <div class="actions"><button class="btn" id="tour-next" type="button">Next photo</button><a class="btn primary" href="#book">Check availability and book</a></div>
+  </section>
+
+  <section data-view="book" hidden>
+    <p><a href="#room">Back to the Oak Room</a></p>
+    <h1>Book the Oak Room</h1>
+    <div id="b-error" class="alert error" hidden></div>
+    <form id="b-form" class="card" novalidate>
+      <div id="b-date-field">
+        <label for="b-date">Date (for example, 2026-12-03 or December 3, 2026)</label>
+        <input id="b-date" placeholder="YYYY-MM-DD" autocomplete="off">
+      </div>
+      <label for="b-time">Time</label>
+      <select id="b-time"><option>Morning</option><option>Afternoon</option><option>Evening</option></select>
+      <label for="b-attendees">Attendees</label>
+      <input id="b-attendees" type="number" min="1" max="20" value="1">
+      <label for="b-name">Your name</label>
+      <input id="b-name" autocomplete="off">
+      <div class="actions"><button class="btn primary" id="b-submit" type="submit">Book the Oak Room</button><a href="#room">Cancel</a></div>
+    </form>
+  </section>
+
+  <section data-view="booked" hidden>
+    <div class="alert ok">Your Oak Room booking is confirmed. You can change it any time before the day.</div>
+    <div class="card"><dl id="c-summary"></dl></div>
+    <div class="actions"><a class="btn" href="#edit">Edit booking</a><a href="#bookings">Go to My bookings</a></div>
+  </section>
+
+  <section data-view="bookings" hidden>
+    <div id="l-status" class="alert ok" hidden>Changes saved.</div>
+    <h1>My bookings</h1>
+    <div id="l-body"></div>
+  </section>
+
+  <section data-view="edit" hidden>
+    <p><a href="#bookings">Back to My bookings</a></p>
+    <h1>Edit booking</h1>
+    <form id="e-form" class="card">
+      <p class="muted" id="e-when"></p>
+      <label for="e-attendees">Attendees</label>
+      <input id="e-attendees" type="number" min="1" max="20">
+      <label for="e-notes">Notes for staff</label>
+      <textarea id="e-notes"></textarea>
+      <p class="muted" style="margin-top:14px">You can change this booking again later.</p>
+      <div class="actions"><button class="btn primary" type="submit">Save changes</button><a href="#bookings">Cancel without saving</a></div>
+    </form>
+  </section>
+</main>
+<script>
+  const photos = ['The long table', 'Projector wall', 'Courtyard windows', 'Entrance hall'];
+  let photo = 0;
+  document.getElementById('tour-next').addEventListener('click', () => {
+    photo = (photo + 1) % photos.length;
+    document.getElementById('tour-photo').textContent = `Photo ${photo + 1} of 4: ${photos[photo]}`;
+  });
+
+  const MONTHS = ['january','february','march','april','may','june','july','august','september','october','november','december'];
+  function parseDate(raw) {
+    const s = raw.trim().toLowerCase().replace(/,/g, '').replace(/(\d)(st|nd|rd|th)\b/g, '$1');
+    let y, m, d, x;
+    if ((x = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(s))) [y, m, d] = [+x[1], +x[2], +x[3]];
+    else if ((x = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(s))) [m, d, y] = [+x[1], +x[2], +x[3]];
+    else if ((x = /^([a-z]+) (\d{1,2}) (\d{4})$/.exec(s))) [m, d, y] = [MONTHS.findIndex(n => n.startsWith(x[1].slice(0, 3))) + 1, +x[2], +x[3]];
+    else if ((x = /^(\d{1,2}) ([a-z]+) (\d{4})$/.exec(s))) [d, m, y] = [+x[1], MONTHS.findIndex(n => n.startsWith(x[2].slice(0, 3))) + 1, +x[3]];
+    else return null;
+    const date = new Date(Date.UTC(y, m - 1, d));
+    return m >= 1 && date.getUTCMonth() === m - 1 && date.getUTCDate() === d ? date : null;
+  }
+  const fmt = d => d.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
+
+  let pending = false;
+  document.getElementById('b-form').addEventListener('submit', e => {
+    e.preventDefault();
+    if (pending) return;
+    const date = parseDate(document.getElementById('b-date').value);
+    const name = document.getElementById('b-name').value.trim();
+    const problems = [];
+    if (!date) problems.push('Enter the date like 2026-12-03 or December 3, 2026.');
+    if (!name) problems.push('Enter your name.');
+    const err = document.getElementById('b-error');
+    err.innerHTML = problems.join('<br>');
+    err.hidden = !problems.length;
+    document.getElementById('b-date-field').classList.toggle('field-error', !date);
+    if (problems.length) return;
+    pending = true;
+    const btn = document.getElementById('b-submit');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Booking...';
+    const log = store.get('book-submissions', []);
+    log.push(new Date().toLocaleTimeString());
+    store.set('book-submissions', log);
+    console.info('Booking request received:', log.length, 'total');
+    setTimeout(() => {
+      store.set('book-booking', { date: fmt(date), time: document.getElementById('b-time').value, attendees: +document.getElementById('b-attendees').value || 1, name, notes: '' });
+      pending = false;
+      btn.disabled = false;
+      btn.textContent = 'Book the Oak Room';
+      go('booked');
+    }, 4000);
+  });
+
+  const summary = b => `<dt>Date</dt><dd>${b.date}</dd><dt>Time</dt><dd>${b.time}</dd><dt>Attendees</dt><dd>${b.attendees}</dd><dt>Name</dt><dd>${b.name}</dd><dt>Notes</dt><dd>${b.notes || 'None'}</dd>`;
+  onView('booked', () => {
+    const b = store.get('book-booking', null);
+    document.getElementById('c-summary').innerHTML = b ? summary(b) : '<dt>Status</dt><dd>No booking yet</dd>';
+  });
+  let justSaved = false;
+  onView('bookings', () => {
+    const b = store.get('book-booking', null);
+    document.getElementById('l-body').innerHTML = b
+      ? `<div class="card"><div class="row"><h2>Oak Room</h2><a class="btn" href="#edit">Edit</a></div><dl>${summary(b)}</dl></div>`
+      : '<p class="muted">No bookings yet. <a href="#room">Book the Oak Room</a></p>';
+    document.getElementById('l-status').hidden = !justSaved;
+    justSaved = false;
+  });
+  onView('edit', () => {
+    const b = store.get('book-booking', null);
+    if (!b) return go('bookings');
+    document.getElementById('e-when').textContent = `Oak Room, ${b.date}, ${b.time.toLowerCase()}`;
+    document.getElementById('e-attendees').value = b.attendees;
+    document.getElementById('e-notes').value = b.notes;
+  });
+  document.getElementById('e-form').addEventListener('submit', e => {
+    e.preventDefault();
+    const b = store.get('book-booking', null);
+    store.set('book-booking', Object.assign(b, { attendees: +document.getElementById('e-attendees').value || 1, notes: document.getElementById('e-notes').value }));
+    justSaved = true;
+    go('bookings');
+  });
+</script>
+</body>
+</html>

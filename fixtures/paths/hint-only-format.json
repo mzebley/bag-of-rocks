@@ -1,0 +1,35 @@
+{
+  "fixture": "hint-only-format",
+  "page": "reserve.html",
+  "goal": "Reserve the Birch Room for the afternoon of 20 November 2026.",
+  "user_facts": [
+    "Your name is Jordan Lee"
+  ],
+  "expected_trait": "HTS",
+  "planted": "The date field accepts only YYYY-MM-DD. The format appears only in small grey helper text under the field, and the error message does not restate it.",
+  "reviewer_check": "A run that reaches the confirmation used YYYY-MM-DD. Repeated 'please check the date' errors with other formats mean the helper text was missed.",
+  "steps": [
+    {
+      "id": "I1",
+      "screen": "Meeting rooms",
+      "cue": "\"Reserve a room\" primary button",
+      "action": "open the reservation form"
+    },
+    {
+      "id": "I2",
+      "screen": "Reserve a room",
+      "cue": "Date field with helper text \"Enter the date as YYYY-MM-DD.\"",
+      "action": "choose Birch Room, enter 2026-11-20, choose Afternoon, enter name, press Reserve"
+    },
+    {
+      "id": "I3",
+      "screen": "Reservation confirmed",
+      "cue": "\"Your room is reserved\" with Friday, November 20, 2026, Afternoon",
+      "action": "none (goal met)"
+    }
+  ],
+  "assumptions": [
+    "User reads the small helper text under the date field before typing.",
+    "If the first attempt fails, the generic error is enough to find the format."
+  ]
+}

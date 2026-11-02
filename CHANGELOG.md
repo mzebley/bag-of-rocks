@@ -27,6 +27,10 @@ Packet text changes (trace schema gains `click_space`), so packets built from th
 ### Persona
 - **Phase 1 "Reading" no longer restates Helper-Text Skipper.** Previous: "Read headings, button and link labels, field labels, error messages, and the answer or result you came for. Don't read instructions, descriptions, hints, or explanatory paragraphs unless your traits say you would." Now: "Read what this person would naturally read on the way to their goal; your traits may narrow that." Evidence: in run-2026-10-31-d (hint-only-format fixture, HTS removed), the tester still skipped a legible date hint and tagged it `ordinary`; removing the card also removed its read-after-two-failures limit. HTS ablations were impossible under the old wording. After the change, both HTS-off testers (run-2026-11-01-a, -b) read the hint and entered `2026-11-20` on the first try; with HTS on (run-2026-10-31-a to -c), 0 of 3 did. Descriptive only: 5 runs on one fixture.
 
+### Calibration fixtures
+- Added the rock garden in `fixtures/`: seven planted-blind-spot pages, intended paths, and `new_run.py`. See `fixtures/README.md`.
+- `decoy-primary` and `clean-control` goals say "Reserve" instead of "Book the Oak Room", which matched the form's submit label and was flagged by the answer-key check.
+
 ### Output
 - Filmstrip shows an "Assumptions tested" section.
 - SKILL.md states that the tester's browser tool must save screenshots as files, and that the skill needs a rendered URL.

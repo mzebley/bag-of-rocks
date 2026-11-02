@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>My bookings - Cedar Hall</title><link rel="stylesheet" href="style.css"><script src="app.js"></script></head>
+<body>
+<header><div class="bar"><a class="brand" href="#list">Cedar Hall</a><nav><a href="#list">My bookings</a></nav></div></header>
+<main>
+  <section data-view="list">
+    <h1>My bookings</h1>
+    <div class="card">
+      <div class="row"><h2>Oak Room</h2><a class="btn" href="#edit">Edit</a></div>
+      <dl id="l-summary"></dl>
+    </div>
+  </section>
+
+  <section data-view="edit" hidden>
+    <div class="card">
+      <div class="row"><h2>Edit booking</h2><button class="btn small" id="e-save" type="button">Save</button></div>
+      <p class="muted">Oak Room, Thursday 3 December 2026, morning</p>
+      <div id="e-status" class="alert ok" hidden>Saved</div>
+      <label for="e-attendees">Attendees</label>
+      <input id="e-attendees" type="number" min="1" max="20">
+      <label for="e-notes">Notes for staff</label>
+      <textarea id="e-notes"></textarea>
+      <div class="actions"><button class="btn primary big" id="e-done" type="button">Done</button></div>
+    </div>
+  </section>
+</main>
+<script>
+  const initial = { attendees: 10, notes: 'Please leave the projector on.' };
+  const booking = () => store.get('booking', initial);
+  onView('list', () => {
+    const b = booking();
+    document.getElementById('l-summary').innerHTML =
+      `<dt>Date</dt><dd>Thursday 3 December 2026, morning</dd><dt>Attendees</dt><dd>${b.attendees}</dd><dt>Notes</dt><dd>${b.notes || 'None'}</dd>`;
+  });
+  onView('edit', () => {
+    const b = booking();
+    document.getElementById('e-attendees').value = b.attendees;
+    document.getElementById('e-notes').value = b.notes;
+    document.getElementById('e-status').hidden = true;
+  });
+  document.getElementById('e-save').addEventListener('click', () => {
+    store.set('booking', { attendees: +document.getElementById('e-attendees').value || 1, notes: document.getElementById('e-notes').value });
+    document.getElementById('e-status').hidden = false;
+  });
+  document.getElementById('e-done').addEventListener('click', () => go('list'));
+</script>
+</body>
+</html>

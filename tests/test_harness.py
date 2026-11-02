@@ -11,6 +11,7 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
 SKILL = ROOT/'skills'/'bag-of-rocks'
+HAS_TOOLS = (ROOT/'tools'/'release.py').exists()  # repo checkout only; not in the npm package
 PNG = base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+a9X8AAAAASUVORK5CYII=')
 
 class HarnessTests(unittest.TestCase):
@@ -254,6 +255,7 @@ class HarnessTests(unittest.TestCase):
         self.assertEqual(len(prompts),len(set(prompts)))
         self.assertTrue(all(len(p)<=128 and '@' not in p for p in prompts))
 
+    @unittest.skipUnless(HAS_TOOLS, 'release tools are not in the npm package')
     def test_release_helper_checks_tag_and_builds_codex_zip(self):
         tool=[sys.executable,str(ROOT/'tools/release.py')]
         version=json.loads((ROOT/'package.json').read_text())['version']
@@ -271,10 +273,13 @@ class HarnessTests(unittest.TestCase):
         claude=json.loads((ROOT/'.claude-plugin/plugin.json').read_text())
         ui=json.loads((ROOT/'.codex-plugin/plugin.json').read_text())['interface']
         refs={claude.get('icon'),ui.get('logo'),ui.get('composerIcon')}-{None}
+        for ref in refs:
+            self.assertTrue((ROOT/ref).exists(),ref)
+        if not HAS_TOOLS:
+            return
         sys.path.insert(0,str(ROOT/'tools'))
         from release import icon_problems
         for ref in refs:
-            self.assertTrue((ROOT/ref).exists(),ref)
             self.assertEqual(icon_problems(ROOT/ref),[],ref)
         bad=self.run/'small.png'; bad.write_bytes(PNG)
         self.assertTrue(icon_problems(bad))

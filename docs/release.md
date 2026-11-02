@@ -16,4 +16,32 @@ The published `bag-of-rocks@0.7.0` package is public. It uses an explicit file a
 
 Download the files with `npm pack bag-of-rocks@0.7.0`, extract the archive, and copy `skills/bag-of-rocks/` into your agent's skills directory as described in the README. npm installation alone does not register the skill with an agent. Python 3 runs the helpers; model and browser usage remain separate.
 
-Before each publication, inspect the tarball, run its offline tests, and confirm the authenticated npm account. Publish the inspected tarball to the public registry after completing npm's authentication prompts.
+## Release process
+
+Releases run from a tag. Pushing `v<version>` starts `.github/workflows/release.yml`:
+
+1. **verify**: `tools/release.py check` confirms the tag matches `package.json`, SKILL.md, both plugin manifests, and a dated CHANGELOG section. Then the offline tests, `claude plugin validate --strict`, and the tests from the packed tarball.
+2. **npm**: publishes with npm trusted publishing (OIDC, with provenance). No token is stored. It skips a version that's already on npm.
+3. **github-release**: creates the release from the CHANGELOG section and attaches `bag-of-rocks-codex-<version>.zip` for the OpenAI portal.
+
+To cut a release:
+
+```sh
+# bump the version in package.json, SKILL.md, .claude-plugin/plugin.json, .codex-plugin/plugin.json
+# date the CHANGELOG section, then:
+python3 tools/release.py check v0.8.0
+git commit -am "Release 0.8.0" && git push
+git tag -a v0.8.0 -m "Bag of Rocks 0.8.0" && git push origin v0.8.0
+```
+
+`.github/workflows/ci.yml` runs the tests, strict validation, and a package dry run on every push to `main` and every pull request.
+
+**One-time setup:**
+
+- npmjs.com: in the package settings, under Trusted publishing, add GitHub Actions with repository `mzebley/bag-of-rocks`, workflow `release.yml`, and environment `npm`. Then, optionally, require trusted publishing and disallow tokens.
+- GitHub: the `npm` environment appears on the first run. Add a required reviewer there if you want to approve each publish.
+
+**Directories:**
+
+- Anthropic's directory: submit once at claude.ai/directory/manage, tracking a tag or release branch. It then picks up new versions from the repository by itself.
+- OpenAI's Plugins directory: upload the Codex ZIP from each GitHub release in the plugin portal. A listing also needs `logo` and `composerIcon` artwork in `.codex-plugin/plugin.json`.

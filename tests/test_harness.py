@@ -244,5 +244,27 @@ class HarnessTests(unittest.TestCase):
             self.assertNotIn('version',entry,p)  # version lives in plugin.json only
         self.assertTrue((SKILL/'SKILL.md').read_text().startswith('---\nname: bag-of-rocks\n'))
 
+    def test_codex_listing_fields_fit_directory_limits(self):
+        ui=json.loads((ROOT/'.codex-plugin/plugin.json').read_text())['interface']
+        self.assertLessEqual(len(ui['displayName']),30)
+        self.assertLessEqual(len(ui['shortDescription']),30)
+        self.assertLessEqual(len(ui.get('longDescription','')),4000)
+        prompts=ui.get('defaultPrompt',[])
+        self.assertLessEqual(len(prompts),3)
+        self.assertEqual(len(prompts),len(set(prompts)))
+        self.assertTrue(all(len(p)<=128 and '@' not in p for p in prompts))
+
+    def test_release_helper_checks_tag_and_builds_codex_zip(self):
+        tool=[sys.executable,str(ROOT/'tools/release.py')]
+        version=json.loads((ROOT/'package.json').read_text())['version']
+        self.assertEqual(subprocess.run(tool+['check',f'v{version}'],capture_output=True).returncode,0)
+        self.assertNotEqual(subprocess.run(tool+['check','v0.0.1'],capture_output=True).returncode,0)
+        self.assertEqual(subprocess.run(tool+['codex-zip',str(self.run)],capture_output=True).returncode,0)
+        import zipfile
+        names=zipfile.ZipFile(self.run/f'bag-of-rocks-codex-{version}.zip').namelist()
+        self.assertIn('.codex-plugin/plugin.json',names)
+        self.assertIn('skills/bag-of-rocks/SKILL.md',names)
+        self.assertFalse(any(n.startswith(('.claude-plugin','tests/','docs/')) for n in names))
+
 if __name__=='__main__':
     unittest.main()

@@ -17,7 +17,7 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Bag of Rocks",
-    "shortDescription": "Blind UX walkthroughs by a confused synthetic user",
+    "shortDescription": "Synthetic UX walkthroughs",
     "longDescription": "Give an agent a goal without the route. A blind tester persona works through your rendered app, and a reviewer compares its path with the intended one in an annotated screenshot filmstrip.",
     "developerName": "Mark Zebley",
     "category": "Productivity",
@@ -25,6 +25,11 @@
       "Read",
       "Write"
     ],
-    "websiteURL": "https://github.com/mzebley/bag-of-rocks"
+    "websiteURL": "https://github.com/mzebley/bag-of-rocks",
+    "defaultPrompt": [
+      "Run a bag-of-rocks walkthrough: change my mailing address on our staging site, without saving.",
+      "Use bag-of-rocks to retest the checkout fix on localhost with the full-bag preset.",
+      "Have a confused first-time user try to book a room on our local site and show me where they got stuck."
+    ]
   }
 }

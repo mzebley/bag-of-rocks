@@ -1,0 +1,85 @@
+# Push a v* tag to release: verify, publish to npm, then create the GitHub release.
+# npm uses trusted publishing (OIDC), so no token is stored. One-time setup on npmjs.com:
+# package settings > Trusted publishing > GitHub Actions, repository mzebley/bag-of-rocks,
+# workflow release.yml.
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Tag matches every version field and the changelog
+        run: python3 tools/release.py check "$GITHUB_REF_NAME"
+      - name: Offline tests
+        run: python3 -m unittest discover -s tests -v
+      - name: Validate plugin and marketplace
+        run: npx --yes @anthropic-ai/claude-code plugin validate --strict .
+      - name: Tests from the packed tarball
+        run: |
+          npm pack
+          mkdir unpacked && tar -xzf bag-of-rocks-*.tgz -C unpacked
+          python3 -m unittest discover -s unpacked/package/tests
+
+  npm:
+    needs: verify
+    runs-on: ubuntu-latest
+    environment: npm
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          registry-url: "https://registry.npmjs.org"
+      - name: Publish (trusted publishing, with provenance)
+        run: |
+          if npm view "bag-of-rocks@${GITHUB_REF_NAME#v}" version >/dev/null 2>&1; then
+            echo "bag-of-rocks@${GITHUB_REF_NAME#v} is already on npm; skipping."
+          else
+            npm publish --access public
+          fi
+
+  github-release:
+    needs: npm
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Release notes and Codex submission ZIP
+        run: |
+          python3 tools/release.py notes "${GITHUB_REF_NAME#v}" notes.md
+          python3 tools/release.py codex-zip dist
+      - name: Create or update the GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" dist/*.zip --clobber
+          else
+            gh release create "$GITHUB_REF_NAME" --verify-tag --latest \
+              --title "Bag of Rocks ${GITHUB_REF_NAME#v}" --notes-file notes.md dist/*.zip
+          fi

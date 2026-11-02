@@ -1,0 +1,30 @@
+{
+  "name": "bag-of-rocks",
+  "version": "0.7.0",
+  "description": "Blind synthetic UX walkthroughs by a dense, nervous persona, with an annotated evidence filmstrip.",
+  "author": {
+    "name": "Mark Zebley"
+  },
+  "homepage": "https://github.com/mzebley/bag-of-rocks",
+  "repository": "https://github.com/mzebley/bag-of-rocks",
+  "license": "MIT",
+  "keywords": [
+    "ux",
+    "usability",
+    "synthetic-testing",
+    "agent-skill"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Bag of Rocks",
+    "shortDescription": "Blind UX walkthroughs by a confused synthetic user",
+    "longDescription": "Give an agent a goal without the route. A blind tester persona works through your rendered app, and a reviewer compares its path with the intended one in an annotated screenshot filmstrip.",
+    "developerName": "Mark Zebley",
+    "category": "Productivity",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/mzebley/bag-of-rocks"
+  }
+}

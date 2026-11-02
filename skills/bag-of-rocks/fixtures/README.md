@@ -2,6 +2,8 @@
 
 Planted blind spots for calibration and demos, as described in `references/calibration.md`. Each page is a small static mock of a fictional community center, "Cedar Hall", with one blind spot planted. Page names, titles, and run IDs are neutral; never send the tester anything from this folder except the start URL.
 
+Run the commands below from the skill folder (`skills/bag-of-rocks/` in the repository, or wherever the plugin is installed).
+
 **Serve only `site/`**, so no directory listing exposes `paths/` or this README:
 
 ```bash

@@ -10,6 +10,7 @@ import tempfile
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
+SKILL = ROOT/'skills'/'bag-of-rocks'
 PNG = base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+a9X8AAAAASUVORK5CYII=')
 
 class HarnessTests(unittest.TestCase):
@@ -19,7 +20,7 @@ class HarnessTests(unittest.TestCase):
         self.run = Path(self.temp.name)
 
     def call(self, script, *args):
-        return subprocess.run([sys.executable, str(ROOT/'scripts'/script), *map(str,args)], capture_output=True, text=True)
+        return subprocess.run([sys.executable, str(SKILL/'scripts'/script), *map(str,args)], capture_output=True, text=True)
 
     def packet(self, **changes):
         params = json.loads((ROOT/'examples/run-params.json').read_text())
@@ -208,7 +209,7 @@ class HarnessTests(unittest.TestCase):
     def test_ambient_context_is_recorded(self):
         params=json.loads((ROOT/'examples/run-params.json').read_text()); params['output_dir']=str(self.run/'tester')
         (self.run/'run-params.json').write_text(json.dumps(params)); (self.run/'AGENTS.md').write_text('routes')
-        out=subprocess.run([sys.executable,str(ROOT/'scripts/build_packet.py'),'run-params.json'],cwd=self.run,capture_output=True,text=True).stdout
+        out=subprocess.run([sys.executable,str(SKILL/'scripts/build_packet.py'),'run-params.json'],cwd=self.run,capture_output=True,text=True).stdout
         self.assertIn('AGENTS.md',out); self.assertIn('run folder is inside',out)
         record=json.loads((self.run/'tester-packet.json').read_text())
         self.assertTrue(record['run_folder_in_cwd'])
@@ -216,18 +217,32 @@ class HarnessTests(unittest.TestCase):
         self.assertTrue(any(l.startswith('Ambient:') for l in json.loads((self.run/'run.json').read_text())['limits']))
 
     def test_fixtures_build_strict_packets_without_leaking_their_names(self):
-        names=[p.stem for p in (ROOT/'fixtures/paths').glob('*.json')]
+        names=[p.stem for p in (SKILL/'fixtures/paths').glob('*.json')]
         self.assertEqual(len(names),7)
         for name in names:
-            path=json.loads((ROOT/'fixtures/paths'/f'{name}.json').read_text())
-            self.assertTrue((ROOT/'fixtures/site'/path['page']).exists(),name)
+            path=json.loads((SKILL/'fixtures/paths'/f'{name}.json').read_text())
+            self.assertTrue((SKILL/'fixtures/site'/path['page']).exists(),name)
             self.assertTrue(path['goal'] and path['steps'] and all(s.get('cue') and s.get('action') for s in path['steps']),name)
             root=self.run/f'r{len(list(self.run.iterdir()))}'
-            result=subprocess.run([sys.executable,str(ROOT/'fixtures/new_run.py'),name,'--root',str(root)],capture_output=True,text=True)
+            result=subprocess.run([sys.executable,str(SKILL/'fixtures/new_run.py'),name,'--root',str(root)],capture_output=True,text=True)
             self.assertEqual(result.returncode,0,result.stdout+result.stderr)
             packet=next(root.glob('run-*/tester-packet.txt')).read_text()
             for leak in [*names,'fixture','garden']:
                 self.assertNotIn(leak,packet,name)
+
+    def test_versions_and_plugin_manifests_agree(self):
+        version=json.loads((ROOT/'package.json').read_text())['version']
+        self.assertIn(f'Version {version} ',(SKILL/'SKILL.md').read_text())
+        manifests=[json.loads((ROOT/p).read_text()) for p in ('.claude-plugin/plugin.json','.codex-plugin/plugin.json')]
+        for m in manifests:
+            self.assertEqual((m['name'],m['version']),('bag-of-rocks',version))
+        for p in ('.claude-plugin/marketplace.json','.agents/plugins/marketplace.json'):
+            market=json.loads((ROOT/p).read_text())
+            self.assertEqual(market['name'],'mzebley',p)
+            entry=market['plugins'][0]
+            self.assertEqual(entry['name'],'bag-of-rocks',p)
+            self.assertNotIn('version',entry,p)  # version lives in plugin.json only
+        self.assertTrue((SKILL/'SKILL.md').read_text().startswith('---\nname: bag-of-rocks\n'))
 
 if __name__=='__main__':
     unittest.main()

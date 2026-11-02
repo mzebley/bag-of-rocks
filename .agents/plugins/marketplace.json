@@ -1,0 +1,21 @@
+{
+  "name": "mzebley",
+  "interface": {
+    "displayName": "Mark Zebley"
+  },
+  "plugins": [
+    {
+      "name": "bag-of-rocks",
+      "description": "Blind synthetic UX walkthroughs by a dense, nervous persona, with an annotated evidence filmstrip.",
+      "category": "Productivity",
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "source": {
+        "source": "local",
+        "path": "./"
+      }
+    }
+  ]
+}

@@ -69,7 +69,7 @@ The coordinator writes `run-params.yaml` in the run folder, then builds the pack
 
 ```yaml
 run_id: run-2026-10-27-c                     # neutral; the tester sees it
-skill_dir: ~/.claude/skills/bag-of-rocks     # where SKILL.md lives; omit to use the script's own checkout
+skill_dir: ~/.claude/skills/bag-of-rocks     # folder holding SKILL.md; omit to use the one next to the script
 goal: Determine whether Example Organization 1, 2, or 3 had staffing-related issues.
 start_url: http://localhost:4200/
 account: local-tester                        # alias only, never credentials

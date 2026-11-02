@@ -1,0 +1,15 @@
+{
+  "name": "mzebley",
+  "description": "Mark Zebley's agent skills",
+  "owner": {
+    "name": "Mark Zebley"
+  },
+  "plugins": [
+    {
+      "name": "bag-of-rocks",
+      "description": "Blind synthetic UX walkthroughs by a dense, nervous persona, with an annotated evidence filmstrip.",
+      "category": "Productivity",
+      "source": "./"
+    }
+  ]
+}

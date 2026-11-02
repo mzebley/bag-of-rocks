@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.7.0 (2026-11-02)
+
+Packaging only: tester packets are unchanged.
+
+- **Plugin install for Claude Code and Codex.** The repository is now a plugin and its own marketplace for both agents. Add `mzebley/bag-of-rocks` as a marketplace (named `mzebley`) and install `bag-of-rocks@mzebley`; updates arrive when `version` changes. Manifests: `.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json` for Claude Code, `.codex-plugin/plugin.json` and `.agents/plugins/marketplace.json` for Codex.
+- **Skill moved to `skills/bag-of-rocks/`** with its references, scripts, assets, and fixtures, because Codex loads plugin skills only from `skills/<name>/SKILL.md`. Paths inside the skill are unchanged relative to its folder; repository commands now start with `skills/bag-of-rocks/`. Anyone copying files by hand should copy that folder.
+- `skills/bag-of-rocks/` remains a plain Agent Skills folder for other agents and the skills CLI.
+- A test fails when the version in `package.json`, SKILL.md, and both plugin manifests disagree.
+
 ## 0.6.0 (2026-11-02)
 
 Evidence: audit probes on 2026-10-31. Leaky `run_id`, fixed phrasing, and `prohibited_effects` passed `--strict`; a production URL kept `mutations: allowed`; `FC:5` presets built with intensity 3; YAML intended paths were ignored; mismatched trace headers converted silently.

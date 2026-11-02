@@ -1,5 +1,13 @@
 # Validation
 
+## 0.7.0: plugin packaging checks (2026-11-02)
+
+- Claude Code 2.1.312: `claude plugin validate .` passes. In an isolated config directory, adding the local repository as a marketplace and installing `bag-of-rocks@mzebley` loads one skill.
+- Codex CLI 0.166.0-alpha (bundled with the ChatGPT app): in an isolated `CODEX_HOME`, adding the local repository and installing `bag-of-rocks@mzebley` lists `bag-of-rocks:bag-of-rocks` in the model's available skills. A plugin-root `SKILL.md` installed but did not load, which is why the skill moved to `skills/bag-of-rocks/`.
+- The packet builder and fixture runner work from Codex's installed plugin copy.
+- `npm pack` lists the skill folder and all four plugin manifests; all 21 offline tests pass from the unpacked tarball.
+- Not covered: the skills CLI, Gemini CLI, and the Codex desktop app's Plugins directory.
+
 ## 0.6.0: packaging checks (2026-11-02)
 
 - `npm pack --dry-run` lists 47 files: the skill, helpers, references, templates, docs, examples, tests, and `fixtures/`. No bytecode, run evidence, or `.bag-of-rocks/` folders.

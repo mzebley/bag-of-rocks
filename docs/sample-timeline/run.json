@@ -20,7 +20,7 @@
     ],
     "perception": "illustrative",
     "mode": "fast",
-    "skill_version": "0.6.0"
+    "skill_version": "0.7.0"
   },
   "outcome": {
     "believed": "Ready to save the new address.",

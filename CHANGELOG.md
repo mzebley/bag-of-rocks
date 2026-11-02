@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.6.0 (2026-11-01)
+## 0.6.0 (2026-11-02)
 
 Evidence: audit probes on 2026-10-31. Leaky `run_id`, fixed phrasing, and `prohibited_effects` passed `--strict`; a production URL kept `mutations: allowed`; `FC:5` presets built with intensity 3; YAML intended paths were ignored; mismatched trace headers converted silently.
 

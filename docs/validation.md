@@ -1,5 +1,11 @@
 # Validation
 
+## 0.6.0: packaging checks (2026-11-02)
+
+- `npm pack --dry-run` lists 47 files: the skill, helpers, references, templates, docs, examples, tests, and `fixtures/`. No bytecode, run evidence, or `.bag-of-rocks/` folders.
+- All 20 offline unittest checks pass from an unpacked 0.6.0 tarball, including strict packet builds for all seven fixtures with no leaked fixture names.
+- Not yet covered: installation from the public registry (recorded after publication), installation through the skills CLI, and blind runs on the six fixtures other than `hint-only-format`.
+
 ## 0.6.0: leak test on the hint-only-format fixture (2026-10-31 to 2026-11-01)
 
 - Six blind runs against `fixtures/site/reserve.html`, where the date format appears only in legible grey helper text. Full-bag (HTS on): 0 of 3 testers entered `YYYY-MM-DD` before an error. HTS off under the old Phase 1 wording: 0 of 1, because the base Reading rule repeated HTS. After moving that rule into the HTS card, HTS off: 2 of 2 entered `2026-11-20` first; one completed and one abandoned on a native dropdown that never rendered.

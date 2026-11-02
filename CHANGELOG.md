@@ -4,6 +4,10 @@
 
 - **Automated releases.** Pushing a `v*` tag verifies the release, publishes to npm through trusted publishing, and creates the GitHub release with a Codex submission ZIP attached. CI runs tests and strict plugin validation on every push and pull request. See `docs/release.md`.
 - `tools/release.py` checks that a tag matches every version field and the changelog, writes release notes, and builds the Codex ZIP.
+- **Directory readiness.** README "What it runs and sends" section and a `PRIVACY.md` privacy policy; Claude `displayName`; Codex `privacyPolicyURL` and `supportURL`. The Codex ZIP includes `PRIVACY.md`.
+- `tools/release.py icon` installs a listing icon for both directories after checking size and format.
+- Listing icon: a stack of three rocks (`assets/icon.png`, 1024 px, from `assets/icon.svg`).
+- The release workflow moves a `release` branch to each tagged commit, for Anthropic's directory to follow.
 - Codex listing fields now fit the directory limits: a shorter `shortDescription` and three example prompts. Tests enforce the limits.
 
 ## 0.7.0 (2026-11-02)

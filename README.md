@@ -51,6 +51,15 @@ python3 skills/bag-of-rocks/scripts/trace_to_run.py docs/sample-timeline --films
 
 Open `docs/sample-timeline/filmstrip.html` in a browser. The summary and finding links jump to their checkpoints. The included PNGs come from [fictional screen mockups](docs/sample-timeline/screens.html); no account or private product data is used.
 
+## What it runs and sends
+
+- **Runs:** the skill's instructions, two local Python helpers (`build_packet.py`, `trace_to_run.py`), and a static HTML report. The helpers only read and write files; they make no network requests.
+- **Browses:** your agent's own browser tool opens the URLs you give it and takes screenshots. The skill adds no browser, server, or MCP connection of its own.
+- **Sends:** nothing to the author or any third party. No accounts, telemetry, or analytics. What your agent sends to its model provider follows that provider's terms.
+- **Stores:** run folders (packets, traces, screenshots, reports) where you choose, plus calibration verdicts in your browser's local storage.
+
+See [PRIVACY.md](PRIVACY.md).
+
 ## Requirements
 
 Use an agent with screenshot-based browser control and filesystem access. Give the tester a fresh context when possible; if it already knows the intended path or prior conversation, label the run as an informed pass.

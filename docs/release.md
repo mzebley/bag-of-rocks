@@ -23,6 +23,7 @@ Releases run from a tag. Pushing `v<version>` starts `.github/workflows/release.
 1. **verify**: `tools/release.py check` confirms the tag matches `package.json`, SKILL.md, both plugin manifests, and a dated CHANGELOG section. Then the offline tests, `claude plugin validate --strict`, and the tests from the packed tarball.
 2. **npm**: publishes with npm trusted publishing (OIDC, with provenance). No token is stored. It skips a version that's already on npm.
 3. **github-release**: creates the release from the CHANGELOG section and attaches `bag-of-rocks-codex-<version>.zip` for the OpenAI portal.
+4. **release-branch**: fast-forwards the `release` branch to the tagged commit. Anthropic's directory follows that branch, so it only sees releases.
 
 To cut a release:
 
@@ -41,7 +42,9 @@ git tag -a v0.8.0 -m "Bag of Rocks 0.8.0" && git push origin v0.8.0
 - npmjs.com: in the package settings, under Trusted publishing, add GitHub Actions with repository `mzebley/bag-of-rocks`, workflow `release.yml`, and environment `npm`. Then, optionally, require trusted publishing and disallow tokens.
 - GitHub: the `npm` environment appears on the first run. Add a required reviewer there if you want to approve each publish.
 
+**Listing icon:** one square PNG, 512 to 2048 px and under 2 MB, meets both directories. `python3 tools/release.py icon path/to/icon.png` checks it, copies it to `assets/icon.png`, and points both plugin manifests and `package.json` at it.
+
 **Directories:**
 
-- Anthropic's directory: submit once at claude.ai/directory/manage, tracking a tag or release branch. It then picks up new versions from the repository by itself.
-- OpenAI's Plugins directory: upload the Codex ZIP from each GitHub release in the plugin portal. A listing also needs `logo` and `composerIcon` artwork in `.codex-plugin/plugin.json`.
+- Anthropic's directory: submit once at claude.ai/directory/manage with repository `mzebley/bag-of-rocks`, no plugin path, and tracked branch `release`. The `release` branch first exists after a tag runs the release workflow. After approval, new releases reach the directory by themselves.
+- OpenAI's Plugins directory: upload the Codex ZIP from each GitHub release in the plugin portal. Listing requires the icon above; the privacy policy is [PRIVACY.md](../PRIVACY.md).

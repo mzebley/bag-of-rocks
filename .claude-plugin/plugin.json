@@ -1,5 +1,6 @@
 {
   "name": "bag-of-rocks",
+  "displayName": "Bag of Rocks",
   "version": "0.7.0",
   "description": "Blind synthetic UX walkthroughs by a dense, nervous persona, with an annotated evidence filmstrip.",
   "author": {
@@ -13,5 +14,6 @@
     "usability",
     "synthetic-testing",
     "agent-skill"
-  ]
+  ],
+  "icon": "./assets/icon.png"
 }

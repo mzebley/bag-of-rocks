@@ -264,7 +264,20 @@ class HarnessTests(unittest.TestCase):
         names=zipfile.ZipFile(self.run/f'bag-of-rocks-codex-{version}.zip').namelist()
         self.assertIn('.codex-plugin/plugin.json',names)
         self.assertIn('skills/bag-of-rocks/SKILL.md',names)
+        self.assertIn('PRIVACY.md',names)
         self.assertFalse(any(n.startswith(('.claude-plugin','tests/','docs/')) for n in names))
+
+    def test_icon_references_point_at_a_valid_icon(self):
+        claude=json.loads((ROOT/'.claude-plugin/plugin.json').read_text())
+        ui=json.loads((ROOT/'.codex-plugin/plugin.json').read_text())['interface']
+        refs={claude.get('icon'),ui.get('logo'),ui.get('composerIcon')}-{None}
+        sys.path.insert(0,str(ROOT/'tools'))
+        from release import icon_problems
+        for ref in refs:
+            self.assertTrue((ROOT/ref).exists(),ref)
+            self.assertEqual(icon_problems(ROOT/ref),[],ref)
+        bad=self.run/'small.png'; bad.write_bytes(PNG)
+        self.assertTrue(icon_problems(bad))
 
 if __name__=='__main__':
     unittest.main()

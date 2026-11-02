@@ -5,7 +5,9 @@
   "license": "MIT",
   "files": [
     "LICENSE",
+    "assets/icon.png",
     "CHANGELOG.md",
+    "PRIVACY.md",
     "skills/bag-of-rocks/SKILL.md",
     "skills/bag-of-rocks/references/*.md",
     "skills/bag-of-rocks/scripts/*.py",

@@ -1,6 +1,6 @@
 # Validation
 
-## Unreleased: leak test on the hint-only-format fixture (2026-10-31 to 2026-11-01)
+## 0.6.0: leak test on the hint-only-format fixture (2026-10-31 to 2026-11-01)
 
 - Six blind runs against `fixtures/site/reserve.html`, where the date format appears only in legible grey helper text. Full-bag (HTS on): 0 of 3 testers entered `YYYY-MM-DD` before an error. HTS off under the old Phase 1 wording: 0 of 1, because the base Reading rule repeated HTS. After moving that rule into the HTS card, HTS off: 2 of 2 entered `2026-11-20` first; one completed and one abandoned on a native dropdown that never rendered.
 - Verification after the HTS-limit, dropdown, and settle-check changes (run-20261101-c2b5b6, full-bag): failed once with `20 November 2026`, read the hint because the error marked Date, entered `2026-11-20`, and completed. The dropdown fallback was used without counting as a failure, and the settle check caught two lagging frames. One run.

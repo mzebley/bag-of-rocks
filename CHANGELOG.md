@@ -1,10 +1,10 @@
 # Changelog
 
-## Unreleased
+## 0.6.0 (2026-11-01)
 
 Evidence: audit probes on 2026-10-31. Leaky `run_id`, fixed phrasing, and `prohibited_effects` passed `--strict`; a production URL kept `mutations: allowed`; `FC:5` presets built with intensity 3; YAML intended paths were ignored; mismatched trace headers converted silently.
 
-Packet text changes (trace schema gains `click_space`), so packets built from this version differ from 0.5.0 packets.
+Tester packets change: Phase 1 reading, dropdown, and settle-check guidance, the Helper-Text Skipper limit, and the trace schema (`click_space`). Packets built with 0.6.0 differ from 0.5.0 packets, so compare runs across versions as different conditions.
 
 ### Packet builder
 - Lints every tester-visible field, including `run_id` (flags design words like `retest` or `baseline`), account, device, fixed phrasing, prohibited effects, and custom preset names. Adds a navigation-hint pattern.

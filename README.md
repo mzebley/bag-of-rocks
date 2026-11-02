@@ -6,7 +6,7 @@ Bag of Rocks is a synthetic UX walkthrough skill. Its tester acts as someone who
 
 A coordinator records the intended path and keeps it from the tester. The tester works through the rendered screens, then a reviewer compares its recorded actions with that path. You get an annotated screenshot filmstrip, findings linked to evidence, and saved findings called “rocks” for later regression checks.
 
-**Version:** 0.5.0 · [MIT license](LICENSE) · [Changelog](CHANGELOG.md) · [Provenance](docs/provenance.md)
+**Version:** 0.6.0 · [MIT license](LICENSE) · [Changelog](CHANGELOG.md) · [Provenance](docs/provenance.md)
 
 Use the findings as hypotheses to investigate. They don't establish how real people behave, how many would fail, or whether a product meets accessibility standards.
 
@@ -130,6 +130,6 @@ When contributing a change, include a small reproducible fixture, the observed b
 
 ## Distribution and related work
 
-Version 0.5.0 is published on [npm](https://www.npmjs.com/package/bag-of-rocks/v/0.5.0) and as a [GitHub release](https://github.com/mzebley/bag-of-rocks/releases/tag/v0.5.0). Install the skill from GitHub or a local checkout. The npm package distributes the same skill files: use `npm pack bag-of-rocks@0.5.0` to download the archive, then extract it and follow the local-copy instructions above. npm does not register the skill with your agent automatically. See the [distribution record](docs/release.md) for details.
+Version 0.6.0 is not yet published. The latest published version, 0.5.0, is on [npm](https://www.npmjs.com/package/bag-of-rocks/v/0.5.0) and as a [GitHub release](https://github.com/mzebley/bag-of-rocks/releases/tag/v0.5.0). Install the skill from GitHub or a local checkout. The npm package distributes the same skill files: use `npm pack bag-of-rocks@0.5.0` to download the archive, then extract it and follow the local-copy instructions above. npm does not register the skill with your agent automatically. See the [distribution record](docs/release.md) for details.
 
 [Related work](docs/related-work.md) covers other approaches to simulated users and UX inspection. Bag of Rocks focuses on an uncoached persona pursuing a goal, with a chronological record for review. The comparison is preliminary, not a benchmark.

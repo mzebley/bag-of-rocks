@@ -1,6 +1,6 @@
 {
   "name": "bag-of-rocks",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Synthetic UX walkthrough skill with frozen tester packets and an annotated evidence filmstrip",
   "license": "MIT",
   "files": [

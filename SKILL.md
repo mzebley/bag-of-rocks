@@ -1,6 +1,6 @@
 ---
 name: bag-of-rocks
-description: Run a blind, synthetic UX walkthrough of a rendered app flow as a dense, nervous, low-tech-confidence user, then review where they diverged from the intended path, what misled them, and what it cost. Produces an annotated screenshot filmstrip, component-level findings, and regression "rocks". Use whenever someone wants a UX review, flow review, usability pass, first-pass heuristic walkthrough, "how would a confused user handle this", blind-spot hunting, double-submit or feedback testing, or a retest of a UX fix on a staging or local site, even if they don't name the skill. Not an accessibility conformance audit and not real human research.
+description: Run a blind, synthetic UX walkthrough of a rendered app flow as a dense, nervous, low-tech-confidence user, then review where they diverged from the intended path, what misled them, and what it cost. Produces an annotated screenshot filmstrip, component-level findings, and regression "rocks". Use whenever someone wants a UX review, flow review, usability pass, first-pass heuristic walkthrough, "how would a confused user handle this", blind-spot hunting, double-submit or feedback testing, or a retest of a UX fix on a staging or local site, even if they don't name the skill. Needs a reachable rendered URL and a browser tool; not for reviewing design files or code. Not an accessibility conformance audit and not real human research.
 ---
 
 # Bag of Rocks
@@ -49,7 +49,7 @@ Components: path to design-system inventory
 Budget: max runs, max actions per run
 ```
 
-Ask only for what's consequential and missing. Read defaults from `.bag-of-rocks/config.yaml` if present. If no browser tool is available, report **not tested**; never fabricate a run.
+Ask only for what's consequential and missing. Read defaults from `.bag-of-rocks/config.yaml` if present. If no browser tool is available, report **not tested**; never fabricate a run. The tester's browser tool must save screenshots as files in its output folder (for example, Playwright's screenshot `filename`). Tools that only return images to the model leave the filmstrip with placeholders; say so in Limits.
 
 **Phrasing** matters whenever the product takes free text (search, questions, prompts). With `own-words`, the rock writes its request the way this persona would, and the exact text it entered is recorded. Odd phrasing is realistic, so treat it as a variable to report, not noise. To test whether wording drove an outcome, run a phrasing ablation with `fixed` text.
 
@@ -63,7 +63,7 @@ The coherence rule: every action an expert wouldn't take must cite the trait and
 
 - **`mutations: allowed`** (default): in an authorized sandbox or staging environment the rock may create, edit, and repeat submissions, including duplicates driven by Fidget Clicker.
 - **`mutations: none`**: the rock stops at each commit point and records what it would have done ("would have clicked Submit 3 more times"), marked **untested**. A commit is anything the user deliberately saves, submits, confirms, pins, deletes, or sends, plus typing into fields that save automatically. Incidental writes the system makes on its own (recent-history entries, view logs, analytics) are allowed and noted in the trace.
-- Production, live payments, real outbound messages, and destructive actions on unauthorized data are always off. On a host that looks like production, force `mutations: none` and say so.
+- Production, live payments, real outbound messages, and destructive actions on unauthorized data are always off. On a host that looks like production, force `mutations: none` and say so. `build_packet.py` does this unless the host is declared under `environments` in the project config.
 - Carry every safety instruction into the packet. Redact credentials and personal data. "Localhost" doesn't prove dependencies are isolated; note any cloud side effects you can't rule out.
 
 ## State between runs
@@ -75,11 +75,10 @@ Runs on the same account share state. Something one run creates (a pinned item, 
 1. **Scope.** Confirm goal, start URL, account, phrasing, mutations, mode, budget.
 2. **Hide the answer key.** Write the intended path and its assumptions; get the user's confirmation (reconfirm if the goal or scope changes). See `references/coordinator.md`.
 3. **Set conditions** with operator tooling before handoff.
-4. **Build and freeze the packet:** `python scripts/build_packet.py <run-params.yaml>`. It writes `tester-packet.txt` and its SHA-256 into the run folder. Read the neutrality warnings it prints and resolve them before spawning.
+4. **Build and freeze the packet:** `python3 scripts/build_packet.py <run-params.yaml>`. It applies `.bag-of-rocks/config.yaml` (presets, environments, production guard), writes `tester-packet.txt`, its SHA-256, and `tester-packet.json` (effective settings) into the run folder. Read the neutrality warnings, including answer-key labels from `coordinator/intended-path.*` found in tester-visible fields, and resolve them before spawning.
 5. **Run the rock** in a fresh context with only that packet.
-6. **Freeze the trace:** hash `tester/` before reading it.
-7. **Convert:** `python scripts/trace_to_run.py <run-folder>` detects real image formats and sizes, converts clicks to percentages, renders `trace-readable.md`, writes a `run.json` skeleton for the filmstrip, and lists trace problems (pending results, missing result screenshots, extension mismatches). Fix nothing in `tester/`; carry the warnings into Limits.
-8. **Review** (Phase 2) and **report**; save rocks as `candidate` or higher.
+6. **Freeze and convert before reading:** `python3 scripts/trace_to_run.py <run-folder>` writes `tester.sha256` on first conversion and verifies it afterwards. It also checks the packet hash, compares the trace header with the packet settings, detects real image formats and sizes, converts clicks to percentages, renders `trace-readable.md`, writes a `run.json` skeleton, and lists trace problems (pending results, missing screenshots, inactive trait tags, unknown stop reasons). Fix nothing in `tester/`; carry the warnings into Limits. `--force` regenerates `run.json` and keeps reviewer-written fields.
+7. **Review** (Phase 2) and **report**; save rocks as `candidate` or higher.
 
 ## Phase 1: Be the rock (tester)
 
@@ -90,7 +89,7 @@ You are the rock: a dense, nervous user who is unfamiliar with technology and wi
 
 **The action loop.** For every action: (1) take a screenshot, (2) decide from that screenshot only, (3) act on positions in that same screenshot, (4) take a result screenshot, (5) only then write the step, with its result filled in. Never record a result as pending, and never put one step's result in the next step. If you scrolled or waited, or anything may have moved, start the loop over with a new screenshot. Record clicks as exact pixel coordinates on the step's screenshot; if you clicked through an accessibility-tree target, mark it `approx: true`.
 
-**Reading.** Read headings, button and link labels, field labels, error messages, and the answer or result you came for. Don't read instructions, descriptions, hints, or explanatory paragraphs unless your traits say you would. When results appear, take the headline at face value. You may notice that a number looks low or that something looks wrong, and you may open it, but don't study the evidence behind it, weigh confidence levels, or reason like an analyst.
+**Reading.** Read what this person would naturally read on the way to their goal; your traits may narrow that. When results appear, take the headline at face value. You may notice that a number looks low or that something looks wrong, and you may open it, but don't study the evidence behind it, weigh confidence levels, or reason like an analyst.
 
 **Writing.** If you have to type a request or question, write it the way you naturally would as this person, unless the packet gives fixed text. Record exactly what you entered.
 

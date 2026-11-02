@@ -158,6 +158,10 @@ ul.card{padding-left:24px;max-width:85ch}
   if ((R.intended||[]).length) h += `<h2>Intended path (hidden from the rock)</h2><div class="rail">` + R.intended.map(i =>
     `<div class="card"><strong>${esc(i.id)} · ${esc(i.screen)}</strong><br>${esc(i.cue)}<br><span class="meta">${esc(i.action)}</span></div>`).join('') + `</div>`;
 
+  const aCls = st => st === 'failed' ? 'k-unrecovered' : st === 'held' ? 'k-alternate' : 'meta';
+  if ((R.assumptions||[]).length) h += `<h2>Assumptions tested</h2><ul class="card">` + R.assumptions.map(a =>
+    `<li><span class="chip ${aCls(a.status)}">${esc(a.status || 'not reviewed')}</span>${esc(a.text)}</li>`).join('') + `</ul>`;
+
   const shot = (src, alt, overlays) => `<div class="shot">${src ? `<img src="${esc(src)}" alt="${esc(alt)}">` : `<div class="ph">${esc(alt)}</div>`}${overlays || ''}</div>`;
 
   h += `<h2>Filmstrip</h2>`;

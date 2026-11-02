@@ -25,6 +25,8 @@ rocks_dir: .bag-of-rocks/rocks
 runs_dir: .bag-of-rocks/runs
 ```
 
+`build_packet.py` finds this file by searching upward from the params file (or uses a `config:` path in the params). It applies `default_preset` and `presets`, adds a matching environment's `prohibited` list to `prohibited_effects`, and forces `mutations: none` when that environment says so. A start URL that matches no environment and doesn't look like a dev host (localhost, private IPs, `.test`/`.local`, or labels such as `staging`, `dev`, `qa`, `preview`) is treated as production. Declare the host here to allow mutations on it.
+
 The config never holds credentials. Reference account aliases; the operator supplies secrets at run time.
 
 ## Intended path (the hidden answer key)
@@ -59,14 +61,14 @@ The `assumptions` list is the most valuable part. If the goal or scope changes b
 
 If the user doesn't supply a path, draft one from the design, the code, or a quick expert walkthrough, then ask the user to confirm it. Because drafting it contaminates the current context, the tester must run in a fresh context.
 
-Store the intended path in the run folder under `coordinator/`, never anywhere the tester can read.
+Store the intended path as `coordinator/intended-path.yaml` or `.json` in the run folder, never anywhere the tester can read. Both helpers accept `intended_cue`/`intended_action` or `cue`/`action`. The packet builder warns when a quoted label from a cue (`"Edit"` above) appears in any tester-visible field; `trace_to_run.py` copies the steps and `assumptions` into `run.json` for review.
 
 ## Run parameters and the tester packet
 
 The coordinator writes `run-params.yaml` in the run folder, then builds the packet with the script. Never hand-write or paraphrase a packet.
 
 ```yaml
-run_id: run-2026-10-27-c
+run_id: run-2026-10-27-c                     # neutral; the tester sees it
 skill_dir: ~/.codex/skills/bag-of-rocks      # where SKILL.md lives
 goal: Determine whether Example Organization 1, 2, or 3 had staffing-related issues.
 start_url: http://localhost:4200/
@@ -74,7 +76,7 @@ account: local-tester                        # alias only, never credentials
 preset: full-bag
 traits_add: []
 traits_remove: []
-fc_intensity: 3
+fc_intensity: 3                              # overrides FC:N from a preset
 phrasing: own-words                          # or: {fixed: "exact text"}
 mutations: allowed
 allowed_effects: Create and run a test analysis on the three named records.
@@ -88,7 +90,7 @@ output_dir: /abs/path/.bag-of-rocks/runs/run-2026-10-27-c/tester
 inherited_state: "Analysis X pinned by run-2026-10-27-c"   # coordinator-only; never sent to the tester
 ```
 
-Run `python scripts/build_packet.py run-params.yaml`. It assembles, verbatim: a run block from these parameters, the Phase 1 section of SKILL.md, the active trait cards, and the trace schema. It writes `tester-packet.txt` and `tester-packet.sha256` next to the params file and prints neutrality warnings.
+Run `python scripts/build_packet.py run-params.yaml`. It assembles, verbatim: a run block from these parameters, the Phase 1 section of SKILL.md, the active trait cards, and the trace schema. It writes `tester-packet.txt`, `tester-packet.sha256`, and `tester-packet.json` (effective preset, traits, mutations, and hash, for the reviewer) next to the params file and prints neutrality warnings. Every tester-visible field is checked: `run_id`, goal, account, device, effects, user facts, fixed phrasing, and custom preset names.
 
 Resolve every warning before spawning. Then send the packet file's contents unchanged as the tester's entire instruction, and save the dispatch metadata (agent ID, fork settings, time) to `tester-dispatch.json`.
 

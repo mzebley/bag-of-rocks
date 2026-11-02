@@ -1,5 +1,36 @@
 # Changelog
 
+## Unreleased
+
+Evidence: audit probes on 2026-10-31. Leaky `run_id`, fixed phrasing, and `prohibited_effects` passed `--strict`; a production URL kept `mutations: allowed`; `FC:5` presets built with intensity 3; YAML intended paths were ignored; mismatched trace headers converted silently.
+
+Packet text changes (trace schema gains `click_space`), so packets built from this version differ from 0.5.0 packets.
+
+### Packet builder
+- Lints every tester-visible field, including `run_id` (flags design words like `retest` or `baseline`), account, device, fixed phrasing, prohibited effects, and custom preset names. Adds a navigation-hint pattern.
+- Warns when a quoted label from `coordinator/intended-path.*` appears in a tester-visible field.
+- Reads `.bag-of-rocks/config.yaml`: `default_preset`, `presets`, and `environments` (merges `prohibited`, applies `mutations: none`).
+- Forces `mutations: none` on hosts that don't look like dev or staging and aren't declared in the config.
+- Keeps `FC:N` intensity from presets and `traits_add`; explicit `fc_intensity` wins.
+- Warns when Thumb Reacher runs without a phone viewport.
+- Writes `tester-packet.json` with the effective settings and hash.
+
+### Trace converter
+- Writes `tester.sha256` on first conversion and reports later drift. Verifies the packet hash and records it as `run.packet_sha256`.
+- Compares the trace header (goal, start, preset, traits, mutations, phrasing, run ID) with the packet settings.
+- Flags trait tags that weren't active, `ordinary` mixed with traits, unknown stop reasons, actions without before or result screenshots, and wait steps without screenshots.
+- Reads YAML or JSON intended paths with either key style, and carries `assumptions` into `run.json`.
+- `header.click_space: viewport` converts page-coordinate clicks correctly on high-density screenshots; a viewport/screenshot scale mismatch is reported.
+- `--force` keeps reviewer-written fields instead of discarding them.
+- Missing phrasing defaults to `own-words`, not `fixed`. Screenshot paths outside `tester/` are rejected.
+
+### Persona
+- **Phase 1 "Reading" no longer restates Helper-Text Skipper.** Previous: "Read headings, button and link labels, field labels, error messages, and the answer or result you came for. Don't read instructions, descriptions, hints, or explanatory paragraphs unless your traits say you would." Now: "Read what this person would naturally read on the way to their goal; your traits may narrow that." Evidence: in run-2026-10-31-d (hint-only-format fixture, HTS removed), the tester still skipped a legible date hint and tagged it `ordinary`; removing the card also removed its read-after-two-failures limit. HTS ablations were impossible under the old wording. After the change, both HTS-off testers (run-2026-11-01-a, -b) read the hint and entered `2026-11-20` on the first try; with HTS on (run-2026-10-31-a to -c), 0 of 3 did. Descriptive only: 5 runs on one fixture.
+
+### Output
+- Filmstrip shows an "Assumptions tested" section.
+- SKILL.md states that the tester's browser tool must save screenshots as files, and that the skill needs a rendered URL.
+
 ## 0.5.0 (2026-10-28)
 
 - Prepared public npm distribution as `bag-of-rocks`, with explicit package contents and archive installation guidance.

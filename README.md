@@ -36,7 +36,7 @@ Start with the outcome: what the tester believed, what the evidence supports, an
 
 ![Checkpoint C1 with before and after screens, a click marker, an ignored region, and the tester's expectation](docs/images/timeline-detour.png)
 
-Read each checkpoint from the screen to the expectation, action, result, and next decision. Numbered circles mark clicks; hatched regions identify cues recorded as not read. `VPF` means Visual Priority Follower, the trait illustrated by this detour. These annotations describe the supplied trace; they aren't eye-tracking measurements.
+Read each checkpoint from the screen to the expectation, action, result, and next decision. Numbered circles mark clicks; hatched regions identify cues recorded as not read. `VPF` means Visual-Path Follower, the trait illustrated by this detour. These annotations describe the supplied trace; they aren't eye-tracking measurements.
 
 ![Finding F1 linking the detour to a proposed label change and a follow-up check](docs/images/timeline-finding.png)
 
@@ -114,7 +114,9 @@ python3 scripts/trace_to_run.py /path/to/run --filmstrip
 
 For tester calibration, add `--calibration` to the `--filmstrip` command. This enables plausibility verdicts and their export controls; ordinary reports omit them.
 
-Convert only trusted local traces, and inspect them first. The converter is not hardened for arbitrary downloaded inputs. It reads PNG and JPEG dimensions, but cannot decode WebP dimensions. Keep the tester directory unchanged and include conversion warnings in the report’s Limits section.
+The first conversion writes `tester.sha256`; later conversions report any tester file that changed. `--force` regenerates `run.json` while keeping the reviewer's outcome, findings, assumption status, divergences, and notes.
+
+Convert only trusted local traces, and inspect them first. The converter rejects screenshot paths outside `tester/` but is not hardened for arbitrary downloaded inputs. It reads PNG and JPEG dimensions, but cannot decode WebP dimensions. Keep the tester directory unchanged and include conversion warnings in the report’s Limits section.
 
 ## Validation and contributions
 

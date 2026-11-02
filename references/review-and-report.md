@@ -15,6 +15,7 @@ Save `trace.json` in your output folder and screenshots in `shots/`. Write each 
     "run_id": "", "goal": "", "start": "", "preset": "", "traits": [],
     "phrasing": "own-words | fixed", "mutations": "allowed | none",
     "viewport": {"width": 0, "height": 0},
+    "click_space": "screenshot | viewport",
     "perception": "screenshots | mixed | text",
     "perception_note": "e.g. tool returned accessibility text automatically on tab creation",
     "started_at": ""
@@ -49,7 +50,7 @@ Save `trace.json` in your output folder and screenshots in `shots/`. Write each 
 }
 ```
 
-- `clicks[].px` are pixel coordinates on that step's `screenshot`. Set `approx: true` if the action went through an accessibility-tree target instead of a pixel. `n` above 1 means repeated clicks.
+- `clicks[].px` are pixel coordinates on that step's `screenshot`. If your tool clicks in page coordinates and saves screenshots at a different scale (high-density screens), set `click_space` to `viewport` and fill in `viewport`. Set `approx: true` if the action went through an accessibility-tree target instead of a pixel. `n` above 1 means repeated clicks.
 - Every checkpoint with an action needs a `result_screenshot`. `result` must describe what that screenshot shows, never "pending".
 - `kind: "correction"` steps fix an earlier step by ID without editing it: `{"kind":"correction","corrects":"C5","note":"..."}`.
 - `kind: "wait"` steps record a screenshot while something is busy, with no action.
@@ -65,10 +66,11 @@ The reviewer converts the frozen trace into the filmstrip's `RUN` object. Pixel 
 
 ```json
 {
-  "run": { "id": "", "date": "", "goal": "", "start": "", "preset": "", "traits": [], "phrasing": "", "entered_text": "", "mutations": "", "conditions": [], "perception": "", "mode": "", "skill_version": "0.5.0" },
+  "run": { "id": "", "date": "", "goal": "", "start": "", "preset": "", "traits": [], "phrasing": "", "entered_text": "", "mutations": "", "conditions": [], "perception": "", "mode": "", "packet_sha256": "", "skill_version": "0.5.0" },
   "outcome": { "believed": "", "supported": "", "gap": "" },
   "summary": [ { "finding": "F1", "headline": "", "step": "C3" } ],
   "intended": [ { "id": "I1", "screen": "", "cue": "", "action": "" } ],
+  "assumptions": [ { "text": "", "status": "held | failed | not exercised" } ],
   "steps": [
     {
       "id": "C1", "kind": "checkpoint | wait | reviewer",

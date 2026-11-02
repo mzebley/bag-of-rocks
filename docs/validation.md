@@ -23,9 +23,10 @@ The initial packaging checks did not include a live app walkthrough, browser/Voi
 
 - The packet is instruction-based isolation, not a filesystem sandbox. The coordinator must carry safety boundaries into prohibited_effects. A fresh context alone does not deny file access.
 - Strict packet lint reports failure after writing output; warnings must be resolved before handing off those files.
-- JSON parameters work without PyYAML. YAML depends on it, and the converter can silently fall back to empty parameters after a YAML read error.
+- JSON parameters work without PyYAML. YAML depends on it; the converter now reports a YAML read error as a trace problem instead of falling back silently.
 - Trace input paths and shapes are trusted; arbitrary untrusted traces are outside the tested scope. WebP dimensions are not decoded.
-- The documented intended-path example uses intended_cue/intended_action, while the optional JSON converter expects cue/action. When producing coordinator/intended-path.json, use the converter's cue/action keys; otherwise fill the intended path during review.
+- Neutrality lint is pattern-based plus an answer-key label check. It catches common leaks, not every paraphrase.
+- The production guard is a hostname heuristic. Declare real staging hosts in the project config.
 - The installed changelog describes prior private runs and reviewer verdicts. Those claims are not a transferable calibration certificate for future runs.
 
 These limitations were recorded against the imported 0.4.1 helpers and remain relevant to 0.5.0. The fresh-install checks above cover the updated report presentation and opt-in calibration controls.

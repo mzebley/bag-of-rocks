@@ -1,5 +1,11 @@
 # Validation
 
+## 0.7.1: first automated release (2026-11-02)
+
+- The first tag run stopped at verification: two tests needed `tools/`, which isn't in the npm package. Nothing was published; the tests now skip outside a repository checkout, and the tag moved to the fix.
+- The second run published through trusted publishing once the npm trusted publisher allowed `npm publish` (it allowed only staged publishing at first, which returned "OIDC permission denied").
+- Checked after release: registry integrity matches the workflow's tarball, a SLSA provenance attestation is attached, a fresh install passes its tests, the GitHub release carries the Codex ZIP (manifest, privacy policy, icon, skill), and `release` points at the tagged commit.
+
 ## 0.7.0: plugin packaging checks (2026-11-02)
 
 - Claude Code 2.1.312: `claude plugin validate .` passes. In an isolated config directory, adding the local repository as a marketplace and installing `bag-of-rocks@mzebley` loads one skill.

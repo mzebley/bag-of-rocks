@@ -6,7 +6,8 @@
 - Codex CLI 0.166.0-alpha (bundled with the ChatGPT app): in an isolated `CODEX_HOME`, adding the local repository and installing `bag-of-rocks@mzebley` lists `bag-of-rocks:bag-of-rocks` in the model's available skills. A plugin-root `SKILL.md` installed but did not load, which is why the skill moved to `skills/bag-of-rocks/`.
 - The packet builder and fixture runner work from Codex's installed plugin copy.
 - `npm pack` lists the skill folder and all four plugin manifests; all 21 offline tests pass from the unpacked tarball.
-- Not covered: the skills CLI, Gemini CLI, and the Codex desktop app's Plugins directory.
+- After publication: installing `bag-of-rocks@mzebley` from the GitHub marketplace worked in both agents, unpinned and pinned to `v0.7.0`; `claude plugin update` and `codex plugin marketplace upgrade mzebley` ran cleanly. The registry's 0.7.0 integrity and SHA-256 match the inspected tarball, and all 21 tests pass from a fresh `--ignore-scripts` install with a fresh cache.
+- Not covered: a real update from one plugin version to the next (first possible with the next release), the skills CLI, Gemini CLI, and the Codex desktop app's Plugins directory.
 
 ## 0.6.0: packaging checks (2026-11-02)
 

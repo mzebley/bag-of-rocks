@@ -161,6 +161,6 @@ When contributing a change, include a small reproducible fixture, the observed b
 
 ## Distribution and related work
 
-Version 0.7.0 is not yet published. The latest published version, 0.6.0, is on [npm](https://www.npmjs.com/package/bag-of-rocks/v/0.6.0) and as a [GitHub release](https://github.com/mzebley/bag-of-rocks/releases/tag/v0.6.0). The plugin install above is the recommended path. The npm package distributes the same files: use `npm pack bag-of-rocks` to download the archive, then copy its skill folder as described above. npm does not register the skill with your agent. See the [distribution record](docs/release.md) for details.
+Version 0.7.0 is published on [npm](https://www.npmjs.com/package/bag-of-rocks/v/0.7.0) and as a [GitHub release](https://github.com/mzebley/bag-of-rocks/releases/tag/v0.7.0). The plugin install above is the recommended path. The npm package distributes the same files: use `npm pack bag-of-rocks` to download the archive, then copy its skill folder as described above. npm does not register the skill with your agent. See the [distribution record](docs/release.md) for details.
 
 [Related work](docs/related-work.md) covers other approaches to simulated users and UX inspection. Bag of Rocks focuses on an uncoached persona pursuing a goal, with a chronological record for review. The comparison is preliminary, not a benchmark.

@@ -34,4 +34,4 @@ An agent with screenshot-based browser control and file access, and Python 3 for
 
 ## More
 
-Source, changelog, calibration fixtures, and documentation: https://github.com/mzebley/bag-of-rocks. MIT license.
+Source, changelog, calibration fixtures, and documentation are on [GitHub](https://github.com/mzebley/bag-of-rocks). Released under the MIT license.

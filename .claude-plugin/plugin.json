@@ -15,5 +15,8 @@
     "synthetic-testing",
     "agent-skill"
   ],
-  "icon": "./assets/icon.png"
+  "icon": "./assets/icon.png",
+  "privacyPolicyUrl": "https://github.com/mzebley/bag-of-rocks/blob/main/PRIVACY.md",
+  "supportUrl": "https://github.com/mzebley/bag-of-rocks/issues",
+  "documentationUrl": "https://github.com/mzebley/bag-of-rocks#readme"
 }

@@ -3,6 +3,7 @@
 ## Unreleased
 
 - The `release` branch now holds only the plugin's files (Claude manifest, skill, icon, license, privacy policy, and a listing README from `docs/listing/README.md`), rebuilt from each tag by `tools/update-release-branch.sh`. Anthropic's directory validation flagged the docs images, CI token reference, and README install command that the full repository carried.
+- The filmstrip template's demo data no longer contains a URL, and its local-storage constant is `VERDICT_STORE` instead of `KEY`. The directory's credential check read the pair as a credential beside a remote host. Saved verdicts still load.
 - `fixtures/new_run.py` makes run IDs with `uuid` instead of the `secrets` module, which the directory's credential check matched.
 
 ## 0.7.1 (2026-11-02)

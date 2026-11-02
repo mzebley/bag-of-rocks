@@ -101,7 +101,7 @@ ul.card{padding-left:24px;max-width:85ch}
 
 <script id="run-data" type="application/json">
 {
-  "run": {"id":"demo-run","date":"2026-10-27","goal":"Change my mailing address to 12 Elm St.","start":"https://staging.example.test/","preset":"full-bag","traits":["VPF","HTS","FC:3","LIT","NR","LP"],"phrasing":"own-words","entered_text":"","mutations":"allowed","conditions":["slow-network"],"perception":"mixed","mode":"fast","skill_version":"0.7.1"},
+  "run": {"id":"demo-run","date":"2026-10-27","goal":"Change my mailing address to 12 Elm St.","start":"your staging site","preset":"full-bag","traits":["VPF","HTS","FC:3","LIT","NR","LP"],"phrasing":"own-words","entered_text":"","mutations":"allowed","conditions":["slow-network"],"perception":"mixed","mode":"fast","skill_version":"0.7.1"},
   "outcome": {"believed":"Address updated (saw a green check)","supported":"uncertain","gap":"Check appeared, but the address shown still read the old value."},
   "summary": [
     {"finding":"F1","headline":"Save gives no feedback for several seconds, so the rock clicked it 4 times.","step":"C2"}
@@ -130,10 +130,10 @@ ul.card{padding-left:24px;max-width:85ch}
   const CALIBRATION = false;
   const R = JSON.parse(document.getElementById('run-data').textContent);
   const r = R.run || {};
-  const KEY = 'bag-of-rocks-calibration:' + (r.id || 'run');
+  const VERDICT_STORE = 'bag-of-rocks-calibration:' + (r.id || 'run');
   let verdicts = {};
-  if (CALIBRATION) try { verdicts = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { verdicts = {}; }
-  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(verdicts)); return true; } catch (e) { return false; } };
+  if (CALIBRATION) try { verdicts = JSON.parse(localStorage.getItem(VERDICT_STORE) || '{}') || {}; } catch (e) { verdicts = {}; }
+  const save = () => { try { localStorage.setItem(VERDICT_STORE, JSON.stringify(verdicts)); return true; } catch (e) { return false; } };
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const arr = v => Array.isArray(v) ? v : (v ? String(v).split(/,\s*/) : []);
   const traitsOf = s => arr(s.traits ?? s.trait);

@@ -17,6 +17,7 @@ Use the findings as hypotheses to investigate. They don't establish how real peo
 - A deterministic packet builder with a SHA-256 digest and neutrality warnings.
 - A trace converter that preserves tester files and flags evidence problems.
 - A self-contained HTML filmstrip with optional tester calibration controls.
+- Seven calibration fixtures: local pages with one planted blind spot each, plus a clean control.
 
 The agent performs the walkthrough. These Python scripts do not launch or control a browser, create a sandbox, or enforce permissions.
 
@@ -117,6 +118,17 @@ For tester calibration, add `--calibration` to the `--filmstrip` command. This e
 The first conversion writes `tester.sha256`; later conversions report any tester file that changed. `--force` regenerates `run.json` while keeping the reviewer's outcome, findings, assumption status, divergences, and notes.
 
 Convert only trusted local traces, and inspect them first. The converter rejects screenshot paths outside `tester/` but is not hardened for arbitrary downloaded inputs. It reads PNG and JPEG dimensions, but cannot decode WebP dimensions. Keep the tester directory unchanged and include conversion warnings in the report’s Limits section.
+
+## Try it on the fixtures
+
+The `fixtures/` folder holds a small fictional community-center site with one planted blind spot per page, such as a hint-only date format or a submit button with no loading state. Use it to see a full run without a staging site, or to check the tester after changing a trait.
+
+```sh
+python3 -m http.server 8000 --bind 127.0.0.1 --directory fixtures/site
+python3 fixtures/new_run.py hint-only-format
+```
+
+`new_run.py` creates a run folder with its intended path and a strict packet, then prints the start URL. Give a fresh tester the packet, then convert the trace as above. See [fixtures/README.md](fixtures/README.md) for each fixture and what it should expose.
 
 ## Validation and contributions
 

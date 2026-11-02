@@ -14,6 +14,7 @@ Tester packets change: Phase 1 reading, dropdown, and settle-check guidance, the
 - Keeps `FC:N` intensity from presets and `traits_add`; explicit `fc_intensity` wins.
 - Warns when Thumb Reacher runs without a phone viewport.
 - Writes `tester-packet.json` with the effective settings and hash.
+- Lists instruction files a tester would load (`CLAUDE.md`, `AGENTS.md`) and warns when the run folder is inside the working directory. Ambient context is a fifth blindness dimension in SKILL.md.
 
 ### Trace converter
 - Writes `tester.sha256` on first conversion and reports later drift. Verifies the packet hash and records it as `run.packet_sha256`.
@@ -22,6 +23,7 @@ Tester packets change: Phase 1 reading, dropdown, and settle-check guidance, the
 - Reads YAML or JSON intended paths with either key style, and carries `assumptions` into `run.json`.
 - `header.click_space: viewport` converts page-coordinate clicks correctly on high-density screenshots; a viewport/screenshot scale mismatch is reported.
 - `--force` keeps reviewer-written fields instead of discarding them.
+- Carries ambient instruction files and a run folder inside the working directory into Limits.
 - Missing phrasing defaults to `own-words`, not `fixed`. Screenshot paths outside `tester/` are rejected.
 
 ### Persona
@@ -30,7 +32,6 @@ Tester packets change: Phase 1 reading, dropdown, and settle-check guidance, the
 - **Helper-Text Skipper limit:** previous "read the helper text for a field or step after it has failed twice." Now: read it after one failure whose visible error points at that field or step. Evidence: in run-2026-10-31-a to -c, Low Patience abandoned at the second failure, the same moment the old limit unlocked, so HTS never recovered in full-bag.
 - **Phase 1:** native dropdowns and pickers that don't render in screenshots are chosen through the accessibility tree (`approx: true`) and don't count as failed attempts. Evidence: all six leak-test runs; run-2026-11-01-a abandoned on the dropdown alone.
 - **Phase 1 settle check:** an unchanged result screenshot gets a second screenshot about a second later before counting as no change. Evidence: stale frames in 4 of 6 leak-test runs, including a false fidget in run-2026-11-01-b.
-- **Ambient context** is a fifth blindness dimension. `build_packet.py` lists instruction files a tester would load and warns when the run folder is inside the working directory; `trace_to_run.py` carries both into Limits.
 
 ### Calibration fixtures
 - Added the rock garden in `fixtures/`: seven planted-blind-spot pages, intended paths, and `new_run.py`. See `fixtures/README.md`.

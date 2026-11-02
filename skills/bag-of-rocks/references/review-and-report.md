@@ -66,7 +66,7 @@ The reviewer converts the frozen trace into the filmstrip's `RUN` object. Pixel 
 
 ```json
 {
-  "run": { "id": "", "date": "", "goal": "", "start": "", "preset": "", "traits": [], "phrasing": "", "entered_text": "", "mutations": "", "conditions": [], "perception": "", "mode": "", "packet_sha256": "", "skill_version": "0.7.0" },
+  "run": { "id": "", "date": "", "goal": "", "start": "", "preset": "", "traits": [], "phrasing": "", "entered_text": "", "mutations": "", "conditions": [], "perception": "", "mode": "", "packet_sha256": "", "skill_version": "0.7.1" },
   "outcome": { "believed": "", "supported": "", "gap": "" },
   "summary": [ { "finding": "F1", "headline": "", "step": "C3" } ],
   "intended": [ { "id": "I1", "screen": "", "cue": "", "action": "" } ],

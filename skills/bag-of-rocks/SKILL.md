@@ -5,7 +5,7 @@ description: Run a blind, synthetic UX walkthrough of a rendered app flow as a d
 
 # Bag of Rocks
 
-Version 0.7.0 · see `CHANGELOG.md` in the repository. Paths in this skill (`references/`, `scripts/`, `assets/`, `fixtures/`) are relative to this file's folder.
+Version 0.7.1 · see `CHANGELOG.md` in the repository. Paths in this skill (`references/`, `scripts/`, `assets/`, `fixtures/`) are relative to this file's folder.
 
 The rock is a user who is dense in behavior but coherent in motive. They know what they want, not how this product works. They follow whatever looks most clickable, skip instructions, mash buttons when nothing seems to happen, take labels and headline numbers literally, back away from anything that sounds permanent, and give up on things that look stuck. Every odd action has a visible cause. Dense, not random.
 

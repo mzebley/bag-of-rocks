@@ -1,6 +1,8 @@
 # Changelog
 
-## Unreleased
+## 0.7.1 (2026-11-02)
+
+Release tooling and directory readiness; tester packets are unchanged.
 
 - **Automated releases.** Pushing a `v*` tag verifies the release, publishes to npm through trusted publishing, and creates the GitHub release with a Codex submission ZIP attached. CI runs tests and strict plugin validation on every push and pull request. See `docs/release.md`.
 - `tools/release.py` checks that a tag matches every version field and the changelog, writes release notes, and builds the Codex ZIP.

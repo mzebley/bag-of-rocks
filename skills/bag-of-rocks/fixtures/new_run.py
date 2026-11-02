@@ -16,9 +16,9 @@ dead-end, clean-control. Serve the pages first:
 import argparse
 import datetime
 import json
-import secrets
 import subprocess
 import sys
+import uuid
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -37,7 +37,7 @@ def main():
     a = ap.parse_args()
 
     path = json.loads((HERE / "paths" / f"{a.fixture}.json").read_text(encoding="utf-8"))
-    run_id = f"run-{datetime.date.today():%Y%m%d}-{secrets.token_hex(3)}"
+    run_id = f"run-{datetime.date.today():%Y%m%d}-{uuid.uuid4().hex[:6]}"
     run_dir = Path(a.root).expanduser().resolve() / run_id
     (run_dir / "coordinator").mkdir(parents=True)
     (run_dir / "tester").mkdir()

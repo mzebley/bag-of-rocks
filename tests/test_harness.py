@@ -284,5 +284,19 @@ class HarnessTests(unittest.TestCase):
         bad=self.run/'small.png'; bad.write_bytes(PNG)
         self.assertTrue(icon_problems(bad))
 
+    @unittest.skipUnless(HAS_TOOLS, 'release tools are not in the npm package')
+    def test_plugin_tree_holds_only_plugin_files(self):
+        out=self.run/'tree'
+        self.assertEqual(subprocess.run([sys.executable,str(ROOT/'tools/release.py'),'plugin-tree',str(out)],capture_output=True).returncode,0)
+        names={p.relative_to(out).as_posix() for p in out.rglob('*') if p.is_file()}
+        for required in ('.claude-plugin/plugin.json','LICENSE','PRIVACY.md','README.md','skills/bag-of-rocks/SKILL.md'):
+            self.assertIn(required,names)
+        self.assertFalse({n for n in names if n.startswith(('docs/','tests/','tools/','.github/','examples/','.codex-plugin/','.agents/'))})
+        self.assertFalse({n for n in names if n.endswith(('.png','.jpg','.gif','.webp'))}-{'assets/icon.png'})
+        text='\n'.join((out/n).read_text(errors='ignore') for n in names if not n.endswith('.png'))
+        self.assertNotRegex(text,r'GITHUB_TOKEN|GH_TOKEN|secrets\.|npx |curl |wget ')
+        readme=re.sub(r'```.*?```','',(out/'README.md').read_text(),flags=re.S)
+        self.assertGreaterEqual(len(readme.split()),40)
+
 if __name__=='__main__':
     unittest.main()

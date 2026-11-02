@@ -23,7 +23,7 @@ Releases run from a tag. Pushing `v<version>` starts `.github/workflows/release.
 1. **verify**: `tools/release.py check` confirms the tag matches `package.json`, SKILL.md, both plugin manifests, and a dated CHANGELOG section. Then the offline tests, `claude plugin validate --strict`, and the tests from the packed tarball.
 2. **npm**: publishes with npm trusted publishing (OIDC, with provenance). No token is stored. It skips a version that's already on npm.
 3. **github-release**: creates the release from the CHANGELOG section and attaches `bag-of-rocks-codex-<version>.zip` for the OpenAI portal.
-4. **release-branch**: fast-forwards the `release` branch to the tagged commit. Anthropic's directory follows that branch, so it only sees releases.
+4. **release-branch**: `tools/update-release-branch.sh` commits a plugin-only tree (`tools/release.py plugin-tree`) onto the `release` branch: the Claude manifest, the skill, the icon, `LICENSE`, `PRIVACY.md`, and `docs/listing/README.md` as its README. Anthropic's directory follows that branch, so it sees only released plugin files, not docs, tests, tools, or workflows.
 
 To cut a release:
 

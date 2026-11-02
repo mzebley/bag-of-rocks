@@ -6,6 +6,7 @@ Usage:
     python3 tools/release.py notes 0.7.0 OUT.md    # CHANGELOG section plus install lines
     python3 tools/release.py codex-zip OUT_DIR     # Codex plugin ZIP for the OpenAI portal
     python3 tools/release.py icon IMAGE            # install the listing icon for both directories
+    python3 tools/release.py plugin-tree OUT_DIR   # plugin-only files for the release branch
 """
 import json
 import re
@@ -69,11 +70,34 @@ def codex_zip(out_dir):
         files.append(ROOT / ICON)
     else:
         print(f"Note: no {ICON}; the OpenAI directory requires logo and composerIcon before listing.")
-    files += [f for f in sorted(SKILL.rglob("*")) if f.is_file() and "__pycache__" not in f.parts and f.suffix != ".pyc"]
+    files += skill_files()
     with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
         for f in files:
             z.write(f, f.relative_to(ROOT).as_posix())
     print(f"Codex ZIP written: {out} ({len(files)} files)")
+
+
+def skill_files():
+    return [f for f in sorted(SKILL.rglob("*")) if f.is_file() and "__pycache__" not in f.parts and f.suffix != ".pyc"]
+
+
+def plugin_tree(out_dir):
+    """Only what the Claude plugin needs, for Anthropic's directory to follow on the release branch."""
+    out = Path(out_dir)
+    if out.exists() and any(out.iterdir()):
+        sys.exit(f"{out} is not empty")
+    files = {ROOT / ".claude-plugin" / "plugin.json": ".claude-plugin/plugin.json",
+             ROOT / "LICENSE": "LICENSE", ROOT / "PRIVACY.md": "PRIVACY.md",
+             ROOT / "docs" / "listing" / "README.md": "README.md"}
+    if (ROOT / ICON).exists():
+        files[ROOT / ICON] = ICON
+    for f in skill_files():
+        files[f] = f.relative_to(ROOT).as_posix()
+    for src, rel in files.items():
+        dest = out / rel
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(src, dest)
+    print(f"Plugin tree written: {out} ({len(files)} files)")
 
 
 def icon_problems(path):
@@ -113,7 +137,7 @@ def icon(image):
 
 if __name__ == "__main__":
     cmd, *args = sys.argv[1:] or ["help"]
-    commands = {"check": (check, 1), "notes": (notes, 2), "codex-zip": (codex_zip, 1), "icon": (icon, 1)}
+    commands = {"check": (check, 1), "notes": (notes, 2), "codex-zip": (codex_zip, 1), "icon": (icon, 1), "plugin-tree": (plugin_tree, 1)}
     if cmd not in commands or len(args) != commands[cmd][1]:
         sys.exit(__doc__)
     commands[cmd][0](*args)

@@ -1,4 +1,4 @@
-# Push a v* tag to release: verify, publish to npm, create the GitHub release, then move the release branch.
+# Push a v* tag to release: verify, publish to npm, create the GitHub release, then rebuild the release branch.
 # npm uses trusted publishing (OIDC), so no token is stored. One-time setup on npmjs.com:
 # package settings > Trusted publishing > GitHub Actions, repository mzebley/bag-of-rocks,
 # workflow release.yml.
@@ -84,7 +84,7 @@ jobs:
               --title "Bag of Rocks ${GITHUB_REF_NAME#v}" --notes-file notes.md dist/*.zip
           fi
 
-  # Anthropic's directory follows the release branch, so it only ever sees tagged commits.
+  # Anthropic's directory follows the release branch: plugin files only, rebuilt from each tag.
   release-branch:
     needs: github-release
     runs-on: ubuntu-latest
@@ -94,5 +94,11 @@ jobs:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-      - name: Fast-forward release to the tagged commit
-        run: git push origin "${GITHUB_SHA}:refs/heads/release"
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Commit the plugin-only tree to the release branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          tools/update-release-branch.sh

@@ -1,0 +1,35 @@
+{
+  "fixture": "decoy-primary",
+  "page": "oak-room.html",
+  "goal": "Book the Oak Room for the morning of Thursday 3 December 2026.",
+  "user_facts": [
+    "Your name is Jordan Lee"
+  ],
+  "expected_trait": "VPF",
+  "planted": "The large primary button opens a virtual photo tour. The real booking action is an inline text link, \"Check availability and book\", inside the description paragraph.",
+  "reviewer_check": "Look for a detour into the virtual tour and how many actions it took to find the inline link.",
+  "steps": [
+    {
+      "id": "I1",
+      "screen": "The Oak Room",
+      "cue": "\"Check availability and book\" text link inside the description paragraph",
+      "action": "open the booking form"
+    },
+    {
+      "id": "I2",
+      "screen": "Book the Oak Room",
+      "cue": "Date and time selects and the \"Book the Oak Room\" button",
+      "action": "choose Thursday 3 December 2026 and Morning, enter name, press Book the Oak Room"
+    },
+    {
+      "id": "I3",
+      "screen": "Booking confirmed",
+      "cue": "\"Your Oak Room booking is confirmed\" summary",
+      "action": "none (goal met)"
+    }
+  ],
+  "assumptions": [
+    "User reads the description paragraph instead of pressing the most prominent button.",
+    "User recognizes an inline text link as the booking action."
+  ]
+}

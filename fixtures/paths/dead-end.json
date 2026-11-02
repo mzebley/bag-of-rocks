@@ -1,0 +1,27 @@
+{
+  "fixture": "dead-end",
+  "page": "welcome.html",
+  "goal": "Find out what time Cedar Hall opens on Saturdays.",
+  "user_facts": [],
+  "expected_trait": "LP",
+  "planted": "A large \"Saturdays at Cedar Hall\" banner leads to a market promo page with no header, links, or buttons. The only way back is the browser Back button.",
+  "reviewer_check": "Look for entry into the Saturday promo, then whether the tester used browser Back, retyped the URL, or abandoned. The answer (8:00 am) is under Hours & directions.",
+  "steps": [
+    {
+      "id": "I1",
+      "screen": "Welcome to Cedar Hall",
+      "cue": "\"Hours & directions\" link in the top navigation",
+      "action": "open Hours & directions"
+    },
+    {
+      "id": "I2",
+      "screen": "Hours & directions",
+      "cue": "Saturday row: 8:00 am to 6:00 pm",
+      "action": "none (goal met)"
+    }
+  ],
+  "assumptions": [
+    "User looks for hours in the top navigation rather than the Saturday banner.",
+    "If the banner is taken, the user knows to use browser Back."
+  ]
+}

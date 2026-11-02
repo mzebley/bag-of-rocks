@@ -1,0 +1,33 @@
+{
+  "fixture": "scary-routine",
+  "page": "account.html",
+  "goal": "Update my phone number to 555-0142.",
+  "user_facts": [],
+  "expected_trait": "NR",
+  "planted": "A routine, reversible details edit is labeled \"Submit final record\" with a warning that it cannot be undone. Details stay editable afterward.",
+  "reviewer_check": "Look for hesitation, Cancel, or abandonment at the warning. A completed run shows phone 555-0142 on Your details.",
+  "steps": [
+    {
+      "id": "I1",
+      "screen": "Your details",
+      "cue": "\"Edit details\" button",
+      "action": "open the edit form"
+    },
+    {
+      "id": "I2",
+      "screen": "Edit your details",
+      "cue": "Phone field and the \"Submit final record\" button under the warning",
+      "action": "change phone to 555-0142 and press Submit final record"
+    },
+    {
+      "id": "I3",
+      "screen": "Your details",
+      "cue": "\"Your details were updated\" banner with the new phone",
+      "action": "none (goal met)"
+    }
+  ],
+  "assumptions": [
+    "User treats the irreversible-sounding label as routine and submits anyway.",
+    "User is not put off by the warning box."
+  ]
+}

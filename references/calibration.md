@@ -10,7 +10,7 @@ Without this, there's no way to tell whether a trait change improved the skill o
 
 ## Source 1: Planted fixtures (the rock garden)
 
-A small staging site or set of pages with blind spots planted on purpose, each switchable on and off. One page per known pattern is enough:
+A small set of pages with blind spots planted on purpose, one per known pattern, plus a clean control. They ship in `fixtures/`: serve `fixtures/site/`, then `python3 fixtures/new_run.py <fixture>` sets up a blind run and builds a strict packet. See `fixtures/README.md` for pages, intended paths, and the end-to-end steps.
 
 | Fixture | Planted blind spot | Trait expected to expose it |
 | --- | --- | --- |

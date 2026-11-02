@@ -115,5 +115,19 @@ class HarnessTests(unittest.TestCase):
         self.assertEqual(json.loads(embedded),data)
         self.assertNotIn(data['run']['goal'],html)
 
+    def test_fixtures_build_strict_packets_without_leaking_their_names(self):
+        names=[p.stem for p in (ROOT/'fixtures/paths').glob('*.json')]
+        self.assertEqual(len(names),7)
+        for name in names:
+            path=json.loads((ROOT/'fixtures/paths'/f'{name}.json').read_text())
+            self.assertTrue((ROOT/'fixtures/site'/path['page']).exists(),name)
+            self.assertTrue(path['goal'] and path['steps'] and all(s.get('cue') and s.get('action') for s in path['steps']),name)
+            root=self.run/f'r{len(list(self.run.iterdir()))}'
+            result=subprocess.run([sys.executable,str(ROOT/'fixtures/new_run.py'),name,'--root',str(root)],capture_output=True,text=True)
+            self.assertEqual(result.returncode,0,result.stdout+result.stderr)
+            packet=next(root.glob('run-*/tester-packet.txt')).read_text()
+            for leak in [*names,'fixture','garden']:
+                self.assertNotIn(leak,packet,name)
+
 if __name__=='__main__':
     unittest.main()
